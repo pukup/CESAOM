@@ -1,0 +1,12 @@
+<root>
+    <port id="1">
+        <address id="1"/>
+        <address id="2"/>
+        <address id="3"/>
+    </port>
+    <port id="2">
+        <address id="1"/>
+        <address id="2"/>
+        <address id="3"/>
+    </port>
+</root>
