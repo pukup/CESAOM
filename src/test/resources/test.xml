@@ -1,12 +1,12 @@
 <root>
-    <port id="1">
+    <row id="1">
         <address id="1"/>
         <address id="2"/>
         <address id="3"/>
-    </port>
-    <port id="2">
+    </row>
+    <row id="2">
         <address id="1"/>
         <address id="2"/>
         <address id="3"/>
-    </port>
+    </row>
 </root>

@@ -1,25 +1,25 @@
-package psa.cesa.cesaom;
+package psa.cesa.cesaom.model;
 
 import java.util.List;
 
-public class Port {
+public class Row {
 
-    private int id;
+    private String id;
     private List<Integer> addresses;
 
-    public Port() {
+    public Row() {
     }
 
-    public Port(int id, List<Integer> addresses) {
+    public Row(String id, List<Integer> addresses) {
         this.id = id;
         this.addresses = addresses;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
