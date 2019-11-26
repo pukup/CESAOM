@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import psa.cesa.cesaom.model.dao.Row;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -13,11 +14,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A <code>RowsReader</code> contains functionality to parse xml nodes into <code>Row</code> objects
+ */
 public class RowsReader {
 
     /**
-     * @param InputStream path
-     * @return List<Row>
+     * @param path xml file
+     * @return a list containing <code>Row</code> objects inside the xml file
      * @throws ParserConfigurationException
      * @throws IOException
      * @throws SAXException
@@ -38,8 +42,8 @@ public class RowsReader {
     }
 
     /**
-     * @param Element xmlRow
-     * @return List<Integer>
+     * @param xmlRow xml node
+     * @return a list containing Integers inside the xml row node
      */
     private static List<Integer> getXmlAddressesID(Element xmlRow) {
         NodeList xmlAddresses = xmlRow.getElementsByTagName("address");
@@ -52,8 +56,8 @@ public class RowsReader {
     }
 
     /**
-     * @param InputStream path
-     * @return Document
+     * @param path xml file
+     * @return Document the parsed xml file
      * @throws ParserConfigurationException
      * @throws SAXException
      * @throws IOException

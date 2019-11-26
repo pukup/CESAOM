@@ -3,7 +3,7 @@ package psa.cesa.cesaom;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.xml.sax.SAXException;
-import psa.cesa.cesaom.model.Row;
+import psa.cesa.cesaom.model.dao.Row;
 import psa.cesa.cesaom.model.RowsReader;
 
 import javax.xml.parsers.ParserConfigurationException;
