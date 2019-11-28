@@ -90,4 +90,8 @@ public class SerialController {
         port.setParity(SerialPort.NO_PARITY);
         port.setNumStopBits(2);
     }
+
+    public SerialPort getPort(){
+        return this.port;
+    }
 }
