@@ -9,6 +9,9 @@ import com.fazecast.jSerialComm.SerialPort;
  */
 public class SerialController {
 
+    /**
+     *
+     */
     private static SerialPort[] ports;
     private com.fazecast.jSerialComm.SerialPort port;
     private String portName;

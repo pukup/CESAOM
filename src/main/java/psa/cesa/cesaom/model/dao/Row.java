@@ -8,18 +8,18 @@ import java.util.List;
 public class Row {
 
     private String id;
-    private List<Integer> addresses;
+    private List<Heliostat> heliostats;
 
     public Row() {
     }
 
     /**
      * @param id
-     * @param addresses list with the modbus addresses
+     * @param heliostats list with the <code>Heliostat<code/> objects within the <code>Row<code/>
      */
-    public Row(String id, List<Integer> addresses) {
+    public Row(String id, List<Heliostat> heliostats) {
         this.id = id;
-        this.addresses = addresses;
+        this.heliostats = heliostats;
     }
 
     public String getId() {
@@ -30,11 +30,11 @@ public class Row {
         this.id = id;
     }
 
-    public List<Integer> getAddresses() {
-        return addresses;
+    public List<Heliostat> getHeliostats() {
+        return heliostats;
     }
 
-    public void setAddresses(List<Integer> addresses) {
-        this.addresses = addresses;
+    public void setHeliostats(List<Heliostat> heliostats) {
+        this.heliostats = heliostats;
     }
 }

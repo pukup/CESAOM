@@ -5,10 +5,15 @@ package psa.cesa.cesaom.model.dao;
  */
 public class Heliostat {
 
+    private Row row;
     private int address;
     private int state;
     private int event;
     private int diagnosys;
+
+    public Heliostat(int address) {
+        this.address = address;
+    }
 
     public int getAddress() {
         return address;

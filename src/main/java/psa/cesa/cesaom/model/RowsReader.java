@@ -4,6 +4,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import psa.cesa.cesaom.model.dao.Heliostat;
 import psa.cesa.cesaom.model.dao.Row;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -35,7 +36,7 @@ public class RowsReader {
             Element xmlRow = (Element) xmlRows.item(i);
             Row row = new Row();
             row.setId(xmlRow.getAttribute("id"));
-            row.setAddresses(getXmlAddressesID(xmlRow));
+            row.setHeliostats(getXmlHeliostatAddresses(xmlRow));
             rows.add(row);
         }
         return rows;
@@ -45,14 +46,15 @@ public class RowsReader {
      * @param xmlRow xml node
      * @return a list containing Integers inside the xml row node
      */
-    private static List<Integer> getXmlAddressesID(Element xmlRow) {
+    private static List<Heliostat> getXmlHeliostatAddresses(Element xmlRow) {
         NodeList xmlAddresses = xmlRow.getElementsByTagName("address");
-        List<Integer> addresses = new ArrayList<>();
+        List<Heliostat> heliostats = new ArrayList<>();
         for (int j = 0; j < xmlAddresses.getLength(); j++) {
             Element xmlAddress = (Element) xmlAddresses.item(j);
-            addresses.add(Integer.valueOf(xmlAddress.getAttribute("id")));
+            Heliostat heliostat = new Heliostat(Integer.valueOf(xmlAddress.getAttribute("id")));
+            heliostats.add(heliostat);
         }
-        return addresses;
+        return heliostats;
     }
 
     /**

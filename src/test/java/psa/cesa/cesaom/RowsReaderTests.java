@@ -30,4 +30,9 @@ class RowsReaderTests {
             e.printStackTrace();
         }
     }
+
+    @Test
+    void getXmlHeliostatListTest() {
+
+    }
 }
