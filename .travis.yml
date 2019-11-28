@@ -1,0 +1,5 @@
+sudo: false
+jdk:
+  - openjdk8
+language: java
+script: mvn clean test
