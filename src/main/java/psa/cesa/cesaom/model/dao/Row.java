@@ -8,6 +8,7 @@ import java.util.Map;
 public class Row {
 
     private int id;
+    private String portDir;
     private Map<Integer, Heliostat> heliostats;
 
     /**
@@ -32,6 +33,14 @@ public class Row {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getPortDir() {
+        return portDir;
+    }
+
+    public void setPortDir(String portDir) {
+        this.portDir = portDir;
     }
 
     public Map<Integer, Heliostat> getHeliostats() {
