@@ -1,40 +1,44 @@
 package psa.cesa.cesaom.model.dao;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * Dao which represents a communications line
  */
 public class Row {
 
-    private String id;
-    private List<Heliostat> heliostats;
+    private int id;
+    private Map<Integer, Heliostat> heliostats;
 
-    public Row() {
+    /**
+     * Default constructor
+     */
+    public Row(int id) {
+        this.id = id;
     }
 
     /**
-     * @param id
-     * @param heliostats list with the <code>Heliostat<code/> objects within the <code>Row<code/>
+     * @param id         <code>Row</code> identifier
+     * @param heliostats HashMap with the <code>Heliostat<code/> objects within the <code>Row<code/>
      */
-    public Row(String id, List<Heliostat> heliostats) {
+    public Row(int id, Map<Integer, Heliostat> heliostats) {
         this.id = id;
         this.heliostats = heliostats;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public List<Heliostat> getHeliostats() {
+    public Map<Integer, Heliostat> getHeliostats() {
         return heliostats;
     }
 
-    public void setHeliostats(List<Heliostat> heliostats) {
+    public void setHeliostats(Map<Integer, Heliostat> heliostats) {
         this.heliostats = heliostats;
     }
 }

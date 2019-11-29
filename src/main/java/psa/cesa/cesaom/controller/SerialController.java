@@ -10,10 +10,12 @@ import com.fazecast.jSerialComm.SerialPort;
 public class SerialController {
 
     /**
-     *
+     * ports contents a list with the cpu visible ports.
+     * <p>
+     * port is a <code>SerialPort</code>
      */
     private static SerialPort[] ports;
-    private com.fazecast.jSerialComm.SerialPort port;
+    private SerialPort port;
     private String portName;
 
     /**
@@ -25,8 +27,8 @@ public class SerialController {
     }
 
     /**
-     * @param portName    USB computer address
-     * @param baudRate
+     * @param portName    USB port computer address
+     * @param baudRate    Signal's changes per second
      * @param numDataBits
      * @param parity
      * @param numStopBits
@@ -41,7 +43,7 @@ public class SerialController {
     }
 
     /**
-     * Returns the computer serial ports
+     * Returns the computer serial ports.
      *
      * @return ports
      */
@@ -51,7 +53,7 @@ public class SerialController {
     }
 
     /**
-     * It tries to open the serial port
+     * It tries to open the computer serial port.
      */
     public void open() {
         if (port.openPort()) {
@@ -94,7 +96,7 @@ public class SerialController {
         port.setNumStopBits(2);
     }
 
-    public SerialPort getPort(){
+    public SerialPort getPort() {
         return this.port;
     }
 }

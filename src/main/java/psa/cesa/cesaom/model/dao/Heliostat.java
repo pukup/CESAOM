@@ -5,14 +5,24 @@ package psa.cesa.cesaom.model.dao;
  */
 public class Heliostat {
 
-    private Row row;
+    private int rowID;
     private int address;
     private int state;
     private int event;
     private int diagnosys;
+    private int PositionAZ, PositionEL;
+    private int setPointAZ, setPointEL;
 
     public Heliostat(int address) {
         this.address = address;
+    }
+
+    public int getRowID() {
+        return rowID;
+    }
+
+    public void setRowID(int rowID) {
+        this.rowID = rowID;
     }
 
     public int getAddress() {
@@ -45,5 +55,37 @@ public class Heliostat {
 
     public void setDiagnosys(int diagnosys) {
         this.diagnosys = diagnosys;
+    }
+
+    public int getPositionAZ() {
+        return PositionAZ;
+    }
+
+    public void setPositionAZ(int positionAZ) {
+        PositionAZ = positionAZ;
+    }
+
+    public int getPositionEL() {
+        return PositionEL;
+    }
+
+    public void setPositionEL(int positionEL) {
+        PositionEL = positionEL;
+    }
+
+    public int getSetPointAZ() {
+        return setPointAZ;
+    }
+
+    public void setSetPointAZ(int setPointAZ) {
+        this.setPointAZ = setPointAZ;
+    }
+
+    public int getSetPointEL() {
+        return setPointEL;
+    }
+
+    public void setSetPointEL(int setPointEL) {
+        this.setPointEL = setPointEL;
     }
 }

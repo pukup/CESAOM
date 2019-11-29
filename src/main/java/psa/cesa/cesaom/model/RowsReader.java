@@ -12,8 +12,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A <code>RowsReader</code> contains functionality to parse xml nodes into <code>Row</code> objects
@@ -22,44 +22,44 @@ public class RowsReader {
 
     /**
      * @param path xml file
-     * @return a list containing <code>Row</code> objects inside the xml file
+     * @return HashMap containing <code>Row</code> objects inside the xml file
      * @throws ParserConfigurationException
      * @throws IOException
      * @throws SAXException
      */
-    public static List<Row> readPorts(InputStream path) throws ParserConfigurationException, IOException, SAXException {
+    public static Map<Integer, Row> getXmlRows(InputStream path) throws ParserConfigurationException, IOException, SAXException {
         Document document = getDocument(path);
         Element xmlRoot = document.getDocumentElement();
         NodeList xmlRows = xmlRoot.getElementsByTagName("row");
-        List<Row> rows = new ArrayList<Row>();
+        Map<Integer, Row> rows = new HashMap<>();
         for (int i = 0; i < xmlRows.getLength(); i++) {
             Element xmlRow = (Element) xmlRows.item(i);
-            Row row = new Row();
-            row.setId(xmlRow.getAttribute("id"));
-            row.setHeliostats(getXmlHeliostatAddresses(xmlRow));
-            rows.add(row);
+            int rowId = Integer.valueOf(xmlRow.getAttribute("id"));
+            Row row = new Row(rowId, getXmlHeliostats(xmlRow));
+            rows.put(rowId, row);
         }
         return rows;
     }
 
     /**
      * @param xmlRow xml node
-     * @return a list containing Integers inside the xml row node
+     * @return HashMap containing <code>Heliostat</code> objects inside the xml row node
      */
-    private static List<Heliostat> getXmlHeliostatAddresses(Element xmlRow) {
+    private static Map<Integer, Heliostat> getXmlHeliostats(Element xmlRow) {
         NodeList xmlAddresses = xmlRow.getElementsByTagName("address");
-        List<Heliostat> heliostats = new ArrayList<>();
-        for (int j = 0; j < xmlAddresses.getLength(); j++) {
-            Element xmlAddress = (Element) xmlAddresses.item(j);
-            Heliostat heliostat = new Heliostat(Integer.valueOf(xmlAddress.getAttribute("id")));
-            heliostats.add(heliostat);
+        Map<Integer, Heliostat> heliostats = new HashMap<>();
+        for (int i = 0; i < xmlAddresses.getLength(); i++) {
+            Element xmlAddress = (Element) xmlAddresses.item(i);
+            int heliostatAddress = Integer.valueOf(xmlAddress.getAttribute("id"));
+            Heliostat heliostat = new Heliostat(heliostatAddress);
+            heliostats.put(heliostatAddress, heliostat);
         }
         return heliostats;
     }
 
     /**
      * @param path xml file
-     * @return Document the parsed xml file
+     * @return A document builder with the parsed xml file
      * @throws ParserConfigurationException
      * @throws SAXException
      * @throws IOException
