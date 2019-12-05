@@ -55,12 +55,8 @@ public class SerialController {
     /**
      * It tries to open the computer serial port.
      */
-    public void open() {
-        if (port.openPort()) {
-            //dialog or something
-        } else {
-            //Exception
-        }
+    public boolean open() {
+        return port.openPort();
     }
 
     /**
@@ -79,6 +75,10 @@ public class SerialController {
         byte[] polledFrame = new byte[port.bytesAvailable()];
         port.readBytes(polledFrame, port.bytesAvailable());
         return polledFrame;
+    }
+
+    public boolean close() {
+        return port.closePort();
     }
 
     /**

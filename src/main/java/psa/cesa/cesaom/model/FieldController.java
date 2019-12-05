@@ -5,13 +5,14 @@ import psa.cesa.cesaom.controller.SerialController;
 import psa.cesa.cesaom.model.dao.Heliostat;
 import psa.cesa.cesaom.model.dao.Row;
 
+import javax.print.attribute.HashAttributeSet;
 import java.nio.ByteBuffer;
 import java.util.Map;
 
 /**
  * It polls and commands <code>Heliostat</code> objects within a <code>Row<code/>
  */
-public class fieldController {
+public class FieldController {
     /**
      * POLLER_ARRAY contents the bytes to send a poll request on any heliostat.
      * <p>
@@ -19,29 +20,20 @@ public class fieldController {
      */
     private static final byte[] POLLER_ARRAY = {(byte) 0x03, (byte) 0x00, (byte) 0x10, (byte) 0x00, (byte) 0x08, (byte) 0x45, (byte) 0xC9};
     private Map<Integer, Row> rows;
-    private Row row;
-    private Heliostat heliostat;
 
     /**
      * @param rows
      */
-    public fieldController(Map<Integer, Row> rows) {
+    public FieldController(Map<Integer, Row> rows) {
         this.rows = rows;
-    }
-
-    /**
-     * @param rowId
-     * @param heliostatAddress
-     */
-    public void selectHeliostat(int rowId, int heliostatAddress) {
-        row = new Row(rowId);
-        heliostat = new Heliostat(heliostatAddress);
     }
 
     /**
      *
      */
-    public void poll() {
+    public void poll(int rowId, int heliostatAddress) {
+        Row row = rows.get(rowId);
+        Heliostat heliostat = selectHeliostat(rowId, heliostatAddress);
         if (heliostat != null) {
             SerialController serialController = new SerialController(row.getPortDir());
             serialController.open();
@@ -50,14 +42,23 @@ public class fieldController {
             byteBuffer.put(POLLER_ARRAY);
             serialController.send(byteBuffer.array());
             ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
-            setHelioState(receivedBuffer);
-            //                                                                                     !!!!!!!!!  serialController.close();
-        } else {
-            //            throw Exception;
+            serialController.close();
+            setHelioState(heliostat, receivedBuffer);
+            row.getHeliostats().put(heliostatAddress, heliostat);
         }
     }
 
-    private void setHelioState(ByteBuffer receivedBuffer) {
+    /**
+     * @param rowId
+     * @param heliostatAddress
+     */
+    private Heliostat selectHeliostat(int rowId, int heliostatAddress) {
+        Row row = rows.get(rowId);
+        Heliostat heliostat = row.getHeliostats().get(heliostatAddress);
+        return heliostat;
+    }
+
+    private void setHelioState(Heliostat heliostat, ByteBuffer receivedBuffer) {
         heliostat.setState(0);
         heliostat.setEvent(0);
         heliostat.setDiagnosys(0);
@@ -70,7 +71,9 @@ public class fieldController {
     /**
      *
      */
-    public void sendCommand(String command) {
+    public void sendCommand(int rowId, int heliostatAddress, String command) {
+        Row row = rows.get(rowId);
+        Heliostat heliostat = selectHeliostat(rowId, heliostatAddress);
         if (heliostat != null) {
             SerialController serialController = new SerialController(row.getPortDir());
             serialController.open();
@@ -78,8 +81,6 @@ public class fieldController {
             byteBuffer.put((byte) heliostat.getAddress());
             byteBuffer.put(getType(command));
             serialController.send(byteBuffer.array());
-        } else {
-            //            throw Exception;
         }
     }
 

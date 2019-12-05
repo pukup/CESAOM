@@ -35,7 +35,9 @@ public class RowsReader {
         for (int i = 0; i < xmlRows.getLength(); i++) {
             Element xmlRow = (Element) xmlRows.item(i);
             int rowId = Integer.valueOf(xmlRow.getAttribute("id"));
+            String rowDir = xmlRow.getAttribute("dir");
             Row row = new Row(rowId, getXmlHeliostats(xmlRow));
+            row.setPortDir(rowDir);
             rows.put(rowId, row);
         }
         return rows;

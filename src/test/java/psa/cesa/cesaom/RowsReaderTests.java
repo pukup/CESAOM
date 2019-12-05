@@ -24,6 +24,7 @@ class RowsReaderTests {
         try {
             Map<Integer, Row> rows = RowsReader.getXmlRows(inputStream);
             assertEquals(1, rows.get(1).getId());
+            assertEquals("com4", rows.get(1).getPortDir());
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -13,6 +13,8 @@ import psa.cesa.cesaom.controller.SerialController;
 @SpringBootTest
 public class SerialControllerTest {
 
+    byte[] POLLER_ARRAY = {(byte) 0x03, (byte) 0x00, (byte) 0x10, (byte) 0x00, (byte) 0x08, (byte) 0x45, (byte) 0xC9};
+
     @Mock
     SerialPort port;
 
@@ -22,7 +24,8 @@ public class SerialControllerTest {
 
     @BeforeEach
     public void setup() {
-        Mockito.when(port.openPort()).thenReturn(true);
+        Mockito.when(serialController.open()).thenReturn(true);
+//        Mockito.when(serialController.receive()).thenReturn(POLLER_ARRAY);
     }
 
     @Test
@@ -33,23 +36,28 @@ public class SerialControllerTest {
 
     @Test
     public void testGetPorts() {
-        for (SerialPort port : SerialController.getPorts()
-        ) {
+        for (SerialPort port : SerialController.getPorts()) {
             System.out.println(port.getDescriptivePortName());
         }
     }
 
     @Test
     public void testOpen() {
-        serialController.open();
+        Assertions.assertTrue(serialController.open());
     }
 
     @Test
-    public void testSend() {
+    public void testRecive() {
+        //        Assertions.assertEquals(POLLER_ARRAY, serialController.receive());
 
-    }
 
-    @Test
-    public void testRecibe() {
+//        byte[] polled = serialController.receive();
+//        for (byte b : polled) {
+//            System.out.println(String.format("%02x ", b));
+//        }
+//
+//        for (byte b : POLLER_ARRAY) {
+//            System.out.println(String.format("%02x ", b));
+//        }
     }
 }
