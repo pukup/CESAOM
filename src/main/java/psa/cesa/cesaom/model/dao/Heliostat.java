@@ -1,16 +1,25 @@
 package psa.cesa.cesaom.model.dao;
 
 /**
- * DAO which     represents the physical heliostat state
+ * DAO which represents a physical heliostat
  */
 public class Heliostat {
-
+    /**
+     * @param rowID it keeps it's <code>Row</code> number
+     * @param address Represents the modbus slave address
+     * @param state static and dynamic positions representation
+     * @param diagnosys
+     * @param positionAz
+     * @param positionEL
+     * @param setPointAZ
+     * @param setPointEL
+     */
     private int rowID;
     private int address;
     private int state;
     private int event;
     private int diagnosys;
-    private int PositionAZ, PositionEL;
+    private int positionAZ, positionEL;
     private int setPointAZ, setPointEL;
 
     public Heliostat(int address) {
@@ -58,19 +67,19 @@ public class Heliostat {
     }
 
     public int getPositionAZ() {
-        return PositionAZ;
+        return positionAZ;
     }
 
     public void setPositionAZ(int positionAZ) {
-        PositionAZ = positionAZ;
+        this.positionAZ = positionAZ;
     }
 
     public int getPositionEL() {
-        return PositionEL;
+        return positionEL;
     }
 
     public void setPositionEL(int positionEL) {
-        PositionEL = positionEL;
+        this.positionEL = positionEL;
     }
 
     public int getSetPointAZ() {

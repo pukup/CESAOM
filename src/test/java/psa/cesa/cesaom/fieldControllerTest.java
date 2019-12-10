@@ -26,12 +26,13 @@ class fieldControllerTest {
     Map<Integer, Row> rows = new HashMap<>();
 
     @InjectMocks
-    FieldController fieldController = new FieldController(rows);
+    FieldController fieldController;
 
     @BeforeEach
     public void setup() {
         try {
-            rows = RowsReader.getXmlRows(getClass().getResourceAsStream("test.xml"));
+            rows = RowsReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("test.xml"));
+            fieldController = new FieldController(rows);
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {

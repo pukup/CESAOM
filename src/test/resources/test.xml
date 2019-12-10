@@ -1,5 +1,5 @@
 <root>
-    <row id="1" dir="com4">
+    <row id="1" dir="ttyUSB0">
         <address id="1"/>
         <address id="2"/>
         <address id="3"/>

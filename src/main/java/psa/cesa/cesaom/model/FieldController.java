@@ -29,35 +29,29 @@ public class FieldController {
     }
 
     /**
-     *
-     */
-    public void poll(int rowId, int heliostatAddress) {
-        Row row = rows.get(rowId);
-        Heliostat heliostat = selectHeliostat(rowId, heliostatAddress);
-        if (heliostat != null) {
-            SerialController serialController = new SerialController(row.getPortDir());
-            serialController.open();
-            ByteBuffer byteBuffer = ByteBuffer.allocate(8);
-            byteBuffer.put((byte) heliostat.getAddress());
-            byteBuffer.put(POLLER_ARRAY);
-            serialController.send(byteBuffer.array());
-            ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
-            serialController.close();
-            setHelioState(heliostat, receivedBuffer);
-            row.getHeliostats().put(heliostatAddress, heliostat);
-        }
-    }
-
-    /**
      * @param rowId
      * @param heliostatAddress
      */
-    private Heliostat selectHeliostat(int rowId, int heliostatAddress) {
+    public Heliostat poll(int rowId, int heliostatAddress) {
         Row row = rows.get(rowId);
         Heliostat heliostat = row.getHeliostats().get(heliostatAddress);
+        SerialController serialController = new SerialController(row.getPortDir());
+        serialController.open();
+        ByteBuffer byteBuffer = ByteBuffer.allocate(8);
+        byteBuffer.put((byte) heliostat.getAddress());
+        byteBuffer.put(POLLER_ARRAY);
+        serialController.send(byteBuffer.array());
+        ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
+        setHelioState(heliostat, receivedBuffer);
+        serialController.close();
+        row.getHeliostats().put(heliostatAddress, heliostat);
         return heliostat;
     }
 
+    /**
+     * @param heliostat
+     * @param receivedBuffer
+     */
     private void setHelioState(Heliostat heliostat, ByteBuffer receivedBuffer) {
         heliostat.setState(0);
         heliostat.setEvent(0);
@@ -69,22 +63,23 @@ public class FieldController {
     }
 
     /**
-     *
+     * @param rowId
+     * @param heliostatAddress
+     * @param command
      */
     public void sendCommand(int rowId, int heliostatAddress, String command) {
         Row row = rows.get(rowId);
-        Heliostat heliostat = selectHeliostat(rowId, heliostatAddress);
-        if (heliostat != null) {
-            SerialController serialController = new SerialController(row.getPortDir());
-            serialController.open();
-            ByteBuffer byteBuffer = ByteBuffer.allocate(16);
-            byteBuffer.put((byte) heliostat.getAddress());
-            byteBuffer.put(getType(command));
-            serialController.send(byteBuffer.array());
-        }
+        Heliostat heliostat = row.getHeliostats().get(heliostatAddress);
+        SerialController serialController = new SerialController(row.getPortDir());
+        serialController.open();
+        ByteBuffer byteBuffer = ByteBuffer.allocate(16);
+        byteBuffer.put((byte) heliostat.getAddress());
+        byteBuffer.put(selectCommand(command));
+        serialController.send(byteBuffer.array());
+        serialController.close();
     }
 
-    private byte[] getType(String command) {
+    private byte[] selectCommand(String command) {
         return null;
     }
 }

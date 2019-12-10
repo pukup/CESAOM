@@ -3,25 +3,22 @@ package psa.cesa.cesaom.model.dao;
 import java.util.Map;
 
 /**
- * Dao which represents a communications line
+ * DAO which represents a communications line
  */
 public class Row {
-
+    /**
+     * @param id represents the number (position) of the row within the field
+     * @param portDir is the OS serial port direction
+     * @param heliostats HashMap which contains <code>Heliostat</code> objects within a <code>Row</code>
+     */
     private int id;
     private String portDir;
     private Map<Integer, Heliostat> heliostats;
 
-    /**
-     * Default constructor
-     */
     public Row(int id) {
         this.id = id;
     }
 
-    /**
-     * @param id         <code>Row</code> identifier
-     * @param heliostats HashMap with the <code>Heliostat<code/> objects within the <code>Row<code/>
-     */
     public Row(int id, Map<Integer, Heliostat> heliostats) {
         this.id = id;
         this.heliostats = heliostats;
