@@ -1,10 +1,10 @@
 <root>
-    <row id="1" dir="ttyUSB0">
+    <row id="1" dir="/dev/ttyUSB0">
         <address id="1"/>
         <address id="2"/>
         <address id="3"/>
     </row>
-    <row id="2" dir="">
+    <row id="2" dir="/dev/ttyUSB0">
         <address id="1"/>
         <address id="2"/>
         <address id="3"/>

@@ -1,5 +1,5 @@
 <root>
-    <row id="1">
+    <row id="1" dir="">
         <heliostat id="1"/>
         <heliostat id="2"/>
         <heliostat id="3"/>
@@ -18,7 +18,7 @@
         <heliostat id="16"/>
         <heliostat id="17"/>
     </row>
-    <row id="2">
+    <row id="2" dir="">
         <heliostat id="18"/>
         <heliostat id="19"/>
         <heliostat id="20"/>
@@ -39,7 +39,7 @@
         <heliostat id="35"/>
         <heliostat id="36"/>
     </row>
-    <row id="3">
+    <row id="3" dir="">
         <heliostat id="37"/>
         <heliostat id="38"/>
         <heliostat id="39"/>
@@ -61,7 +61,7 @@
         <heliostat id="55"/>
         <heliostat id="56"/>
     </row>
-    <row id="4">
+    <row id="4" dir="">
         <heliostat id="57"/>
         <heliostat id="58"/>
         <heliostat id="59"/>
@@ -83,7 +83,7 @@
         <heliostat id="85"/>
         <heliostat id="86"/>
     </row>
-    <row id="5">
+    <row id="5" dir="">
         <heliostat id="71"/>
         <heliostat id="72"/>
         <heliostat id="73"/>
@@ -104,7 +104,7 @@
         <heliostat id="94"/>
         <heliostat id="95"/>
     </row>
-    <row id="6">
+    <row id="6" dir="">
         <heliostat id="96"/>
         <heliostat id="97"/>
         <heliostat id="98"/>
@@ -126,7 +126,7 @@
         <heliostat id="113"/>
         <heliostat id="114"/>
     </row>
-    <row id="7">
+    <row id="7" dir="">
         <heliostat id="115"/>
         <heliostat id="116"/>
         <heliostat id="117"/>
@@ -148,7 +148,7 @@
         <heliostat id="133"/>
         <heliostat id="134"/>
     </row>
-    <row id="8">
+    <row id="8" dir="">
         <heliostat id="135"/>
         <heliostat id="136"/>
         <heliostat id="137"/>
@@ -170,7 +170,7 @@
         <heliostat id="153"/>
         <heliostat id="154"/>
     </row>
-    <row id="9">
+    <row id="9" dir="">
         <heliostat id="1"/>
         <heliostat id="2"/>
         <heliostat id="3"/>
@@ -187,7 +187,7 @@
         <heliostat id="14"/>
         <heliostat id="15"/>
     </row>
-    <row id="10">
+    <row id="10" dir="">
         <heliostat id="16"/>
         <heliostat id="17"/>
         <heliostat id="18"/>
@@ -207,7 +207,7 @@
         <heliostat id="32"/>
         <heliostat id="33"/>
     </row>
-    <row id="11">
+    <row id="11" dir="">
         <heliostat id="34"/>
         <heliostat id="35"/>
         <heliostat id="36"/>
@@ -228,7 +228,7 @@
         <heliostat id="51"/>
         <heliostat id="52"/>
     </row>
-    <row id="12">
+    <row id="12" dir="">
         <heliostat id="53"/>
         <heliostat id="54"/>
         <heliostat id="55"/>
@@ -250,7 +250,7 @@
         <heliostat id="80"/>
         <heliostat id="81"/>
     </row>
-    <row id="13">
+    <row id="13" dir="">
         <heliostat id="67"/>
         <heliostat id="68"/>
         <heliostat id="69"/>
@@ -270,7 +270,7 @@
         <heliostat id="89"/>
         <heliostat id="90"/>
     </row>
-    <row id="14">
+    <row id="14" dir="">
         <heliostat id="91"/>
         <heliostat id="92"/>
         <heliostat id="93"/>
@@ -290,7 +290,7 @@
         <heliostat id="107"/>
         <heliostat id="108"/>
     </row>
-    <row id="15">
+    <row id="15" dir="">
         <heliostat id="109"/>
         <heliostat id="111"/>
         <heliostat id="112"/>
@@ -310,7 +310,7 @@
         <heliostat id="126"/>
         <heliostat id="127"/>
     </row>
-    <row id="16">
+    <row id="16" dir="">
         <heliostat id="128"/>
         <heliostat id="129"/>
         <heliostat id="130"/>

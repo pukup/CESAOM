@@ -10,46 +10,30 @@ import com.fazecast.jSerialComm.SerialPort;
 public class SerialController {
 
     /**
-     * ports contents a list with the cpu visible ports.
-     * <p>
-     * port is a <code>SerialPort</code>
+     * @param port Allocates a <code>SerialPort</code> object corresponding to the cpu direction.
      */
-    private static SerialPort[] ports;
     private SerialPort port;
-    private String portName;
 
     /**
-     * @param portName USB computer address
+     * @param portDir serial port computer address
      */
-    public SerialController(String portName) {
-        this.port = SerialPort.getCommPort(portName);
+    public SerialController(String portDir) {
+        this.port = SerialPort.getCommPort(portDir);
         assignDefaultValues();
     }
 
     /**
-     * @param portName    USB port computer address
      * @param baudRate    Signal's changes per second
      * @param numDataBits
      * @param parity
      * @param numStopBits
      */
-    public SerialController(String portName, int baudRate, int numDataBits, boolean parity, int numStopBits) {
-        this.portName = portName;
-        this.port = SerialPort.getCommPort(portName);
+    public SerialController(String portDir, int baudRate, int numDataBits, boolean parity, int numStopBits) {
+        this.port = SerialPort.getCommPort(portDir);
         this.port.setBaudRate(baudRate);
         this.port.setNumDataBits(numDataBits);
         this.port.setParity((parity) ? SerialPort.EVEN_PARITY : SerialPort.NO_PARITY);
         this.port.setNumStopBits(numStopBits);
-    }
-
-    /**
-     * Returns the computer serial ports.
-     *
-     * @return ports
-     */
-    public static SerialPort[] getPorts() {
-        ports = SerialPort.getCommPorts();
-        return ports;
     }
 
     /**
@@ -77,8 +61,27 @@ public class SerialController {
         return polledFrame;
     }
 
+    /**
+     * @return if the port has been closed truly
+     */
     public boolean close() {
         return port.closePort();
+    }
+
+    /**
+     * @return
+     */
+    public SerialPort getPort() {
+        return this.port;
+    }
+
+    /**
+     * Returns the computer serial ports.
+     *
+     * @return ports
+     */
+    public static SerialPort[] getPorts() {
+        return SerialPort.getCommPorts();
     }
 
     /**
@@ -94,9 +97,6 @@ public class SerialController {
         port.setNumDataBits(8);
         port.setParity(SerialPort.NO_PARITY);
         port.setNumStopBits(2);
-    }
-
-    public SerialPort getPort() {
-        return this.port;
+        //        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 100);
     }
 }

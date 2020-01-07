@@ -12,10 +12,16 @@ import psa.cesa.cesaom.model.dao.Heliostat;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
+/**
+ * It contains the api methods to act as an interface between the clients and the application itself
+ */
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
 
-    FieldController fieldController;
+    /**
+     * @param fieldController contains methods for poll and command <code>Heliostat</code>
+     */
+    private FieldController fieldController;
 
     public RestController() {
         try {
@@ -29,10 +35,11 @@ public class RestController {
         }
     }
 
-    @RequestMapping(value = "/poll/{rowId}/{heliostatAddress}", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Heliostat poll(@RequestParam(defaultValue = "1", name = "rowId") int rowId, @RequestParam(defaultValue = "1", name = "heliostatAddress") int heliostatAddress) {
-        return fieldController.poll(rowId, heliostatAddress);
-    }
+//    @RequestMapping(value = "/poll/{rowId}/{heliostatAddress}", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public Heliostat poll(@RequestParam(defaultValue = "1", name = "rowId") int rowId, @RequestParam(defaultValue = "1", name = "heliostatAddress") int heliostatAddress) {
+//        return fieldController.poll(rowId, heliostatAddress);
+//        //test
+//    }
 
     @RequestMapping(value = "/command", method = {RequestMethod.GET})
     public String command(@RequestParam(defaultValue = "1") int rowId, @RequestParam(defaultValue = "1") int heliostatAddress) {

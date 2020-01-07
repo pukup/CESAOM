@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public class Row {
     /**
-     * @param id represents the number (position) of the row within the field
+     * @param id represents the number or position of the row within the field
      * @param portDir is the OS serial port direction
      * @param heliostats HashMap which contains <code>Heliostat</code> objects within a <code>Row</code>
      */
@@ -19,8 +19,9 @@ public class Row {
         this.id = id;
     }
 
-    public Row(int id, Map<Integer, Heliostat> heliostats) {
+    public Row(int id, String portDir, Map<Integer, Heliostat> heliostats) {
         this.id = id;
+        this.portDir = portDir;
         this.heliostats = heliostats;
     }
 
