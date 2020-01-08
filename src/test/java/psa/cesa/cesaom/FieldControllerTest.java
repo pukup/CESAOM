@@ -52,4 +52,13 @@ class FieldControllerTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    public void sendCommandTest(){
+        try {
+            fieldController.sendCommand(1,1,"a");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

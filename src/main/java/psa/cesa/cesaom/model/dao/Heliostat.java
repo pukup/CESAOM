@@ -109,170 +109,170 @@ public class Heliostat {
     /**
      * Converts the least significant nibble from state byte to a string message
      *
-     * @return string
+     * @return string static position message
      */
     public String state0ToString() {
-        String string = "";
+        StringBuilder state0 = new StringBuilder();
         int nibble0 = 0x0f & state;
         switch (nibble0) {
             case 0x0:
-                string.concat("Operación local");
+                state0.append("Operación local");
                 break;
             case 0x1:
-                string.concat("Consiga fija");
+                state0.append("Consiga fija");
                 break;
             case 0x2:
-                string.concat("Busqueda de ceros");
+                state0.append("Busqueda de ceros");
                 break;
             case 0x3:
-                string.concat("Fuera de servicio");
+                state0.append("Fuera de servicio");
                 break;
             case 0x4:
-                string.concat("Posición de defensa");
+                state0.append("Posición de defensa");
                 break;
             case 0x5:
-                string.concat("Abatimiento normal");
+                state0.append("Abatimiento normal");
                 break;
             case 0x6:
-                string.concat("Blanco tierra");
+                state0.append("Blanco tierra");
                 break;
             case 0x7:
-                string.concat("Blanco pasillo 1");
+                state0.append("Blanco pasillo 1");
                 break;
             case 0x8:
-                string.concat("Blanco pasillo 2");
+                state0.append("Blanco pasillo 2");
                 break;
             case 0x9:
-                string.concat("Blanco pasillo 3");
+                state0.append("Blanco pasillo 3");
                 break;
             case 0xa:
-                string.concat("Blanco pasillo 4");
+                state0.append("Blanco pasillo 4");
                 break;
             case 0xb:
-                string.concat("Seguimiento desfasado");
+                state0.append("Seguimiento desfasado");
                 break;
             case 0xc:
-                string.concat("Blanco de emergencia");
+                state0.append("Blanco de emergencia");
                 break;
             case 0xd:
-                string.concat("Seguimiento normal a caldera");
+                state0.append("Seguimiento normal a caldera");
                 break;
             case 0xe:
-                string.concat("Foco");
+                state0.append("Foco");
                 break;
             case 0xf:
-                string.concat("Seguimiento normal al sol");
+                state0.append("Seguimiento normal al sol");
                 break;
         }
-        return string;
+        return state0.toString();
     }
 
     /**
      * Converts the most significant nibble from state byte to a string message
      *
-     * @return string
+     * @return string dynamic position message
      */
     public String state1ToString() {
-        String string = "";
+        StringBuilder state1 = new StringBuilder();
         int nibble1 = 0xf0 & state;
         if ((nibble1 & 0x80) == 0x80) {
-            string.concat("Aviso error");
+            state1.append("Aviso error");
         }
         if ((nibble1 & 0x40) == 0x40) {
-            string.concat(" Aviso evento");
+            state1.append(" Aviso evento");
         }
         if ((nibble1 & 0x20) == 0x20) {
-            string.concat(" Consigna alcanzada EL");
+            state1.append(" Consigna alcanzada EL");
         }
         if ((nibble1 & 0x10) == 0x10) {
-            string.concat(" Consigna alcanzada AZ");
+            state1.append(" Consigna alcanzada AZ");
         }
-        return string;
+        return state1.toString();
     }
 
     /**
      * Converts the two least significant bits from event byte to a string message
      *
-     * @return string
+     * @return string operation event message
      */
     public String eventOperationToString() {
-        String string = "Operación ";
+        StringBuilder operation = new StringBuilder("Operación ");
         int coupleBits0 = 0x3 & event;
         switch (coupleBits0) {
             case 0x0:
-                string.concat("OK");
+                operation.append("OK");
                 break;
             case 0x1:
-                string.concat("Fuera de servicio");
+                operation.append("Fuera de servicio");
                 break;
             case 0x2:
-                string.concat("Heliostato teleconfigurado");
+                operation.append("Heliostato teleconfigurado");
                 break;
         }
-        return string;
+        return operation.toString();
     }
 
     /**
      * Converts the bits at position 2 and 3 from event byte to a string message
      *
-     * @return string
+     * @return string security event message
      */
     public String eventSecurityToString() {
-        String string = "Seguridad ";
+        StringBuilder security = new StringBuilder("Seguridad ");
         int coupleBits1 = 0xc & event;
         switch (coupleBits1) {
             case 0x0:
-                string.concat("OK");
+                security.append("OK");
                 break;
             case 0x4:
-                string.concat("Código de cliente erróneo");
+                security.append("Código de cliente erróneo");
                 break;
         }
-        return string;
+        return security.toString();
     }
 
     /**
      * Converts the bits at position 4 and 5 from event byte to a string message
      *
-     * @return string
+     * @return string communications event message
      */
     public String eventComToString() {
-        String string = "Comunicaciones ";
+        StringBuilder communications = new StringBuilder("Comunicaciones ");
         int coupleBits2 = 0x30 & event;
         switch (coupleBits2) {
             case 0x0:
-                string.concat("OK");
+                communications.append("OK");
                 break;
             case 0x10:
-                System.out.println("Fallo de comunicaciones");
+                communications.append("Fallo de comunicaciones");
                 break;
             case 0x20:
-                System.out.println("No acpeta el comando");
+                communications.append("No acpeta el comando");
                 break;
         }
-        return string;
+        return communications.toString();
     }
 
     /**
      * Converts the bits at position 6 and 7 from event byte to a string message
      *
-     * @return string
+     * @return string clock event message
      */
     public String eventCLToString() {
-        String string = "Fallo CL  ";
+        StringBuilder clock = new StringBuilder("Reloj ");
         int coupleBits3 = 0xc0 & event;
         switch (coupleBits3) {
             case 0x0:
-                string.concat("OK");
+                clock.append("OK");
                 break;
             case 0x40:
-                string.concat("Fallo del micro esclavo");
+                clock.append("Fallo del micro esclavo");
                 break;
             case 0x80:
-                string.concat("Fallo batería reloj BQ3287");
+                clock.append("Fallo batería reloj BQ3287");
                 break;
         }
-        return string;
+        return clock.toString();
     }
 
     /**
@@ -281,24 +281,23 @@ public class Heliostat {
      * @return
      */
     public String diagnosysAz0ToString() {
-        String string = "";
+        StringBuilder diagnosysAz0 = new StringBuilder("Movimiento ");
         int coupleBits0 = 0x3 & diagnosysAZ;
-        string.concat("Movimiento ");
         switch (coupleBits0) {
             case 0x0:
-                string.concat("OK");
+                diagnosysAz0.append("OK");
                 break;
             case 0x1:
-                string.concat("No mueve con motor ON");
+                diagnosysAz0.append("No mueve con motor ON");
                 break;
             case 0x2:
-                string.concat("Mueve con motor OFF");
+                diagnosysAz0.append("Mueve con motor OFF");
                 break;
             case 0x3:
-                string.concat("Gira al revés");
+                diagnosysAz0.append("Gira al revés");
                 break;
         }
-        return string;
+        return diagnosysAz0.toString();
     }
 
     /**
@@ -307,21 +306,20 @@ public class Heliostat {
      * @return
      */
     public String diagnosysAz1ToString() {
-        String string = "";
+        StringBuilder diagnosysAz1 = new StringBuilder("Oscilación ");
         int coupleBits1 = 0xc & diagnosysAZ;
-        string.concat("Oscilación ");
         switch (coupleBits1) {
             case 0x0:
-                string.concat("OK");
+                diagnosysAz1.append("OK");
                 break;
             case 0x4:
-                string.concat("F Oscila");
+                diagnosysAz1.append("F Oscila");
                 break;
             case 0x8:
-                string.concat("F Servo");
+                diagnosysAz1.append("F Servo");
                 break;
         }
-        return string;
+        return diagnosysAz1.toString();
     }
 
     /**
@@ -330,21 +328,20 @@ public class Heliostat {
      * @return
      */
     public String diagnosysAz2ToString() {
-        String string = "";
+        StringBuilder diagnosysAz2 = new StringBuilder("Posición ");
         int coupleBits2 = 0x30 & diagnosysAZ;
-        string.concat("Posición ");
         switch (coupleBits2) {
             case 0x0:
-                string.concat("OK");
+                diagnosysAz2.append("OK");
                 break;
             case 0x10:
-                string.concat("FCoeste");
+                diagnosysAz2.append("FCoeste");
                 break;
             case 0x20:
-                string.concat("FCeste");
+                diagnosysAz2.append("FCeste");
                 break;
         }
-        return string;
+        return diagnosysAz2.toString();
     }
 
     /**
@@ -353,21 +350,20 @@ public class Heliostat {
      * @return
      */
     public String diagnosysAz3ToString() {
-        String string = "";
+        StringBuilder diagnosysAz3 = new StringBuilder("Avisos ");
         int coupleBits3 = 0xc0 & diagnosysAZ;
-        string.concat("Avisos ");
         switch (coupleBits3) {
             case 0x0:
-                string.concat("OK");
+                diagnosysAz3.append("OK");
                 break;
             case 0x40:
-                string.concat("Z_OK");
+                diagnosysAz3.append("Z_OK");
                 break;
             case 0x80:
-                string.concat("BA");
+                diagnosysAz3.append("BA");
                 break;
         }
-        return string;
+        return diagnosysAz3.toString();
     }
 
     /**
@@ -376,24 +372,23 @@ public class Heliostat {
      * @return
      */
     public String diagnosysEl0ToString() {
-        String string = "";
+        StringBuilder diagnosysEl0 = new StringBuilder("Movimiento ");
         int coupleBits0 = 0x3 & diagnosysEL;
-        string.concat("Movimiento ");
         switch (coupleBits0) {
             case 0x0:
-                string.concat("OK");
+                diagnosysEl0.append("OK");
                 break;
             case 0x1:
-                string.concat("No mueve con motor ON");
+                diagnosysEl0.append("No mueve con motor ON");
                 break;
             case 0x2:
-                string.concat("Mueve con motor OFF");
+                diagnosysEl0.append("Mueve con motor OFF");
                 break;
             case 0x3:
-                string.concat("Gira al revés");
+                diagnosysEl0.append("Gira al revés");
                 break;
         }
-        return string;
+        return diagnosysEl0.toString();
     }
 
     /**
@@ -402,21 +397,20 @@ public class Heliostat {
      * @return
      */
     public String diagnosysEl1ToString() {
-        String string = "";
+        StringBuilder diagnosysEl1 = new StringBuilder("Oscilación ");
         int coupleBits1 = 0xc & diagnosysEL;
-        string.concat("Oscilación ");
         switch (coupleBits1) {
             case 0x0:
-                string.concat("OK");
+                diagnosysEl1.append("OK");
                 break;
             case 0x4:
-                string.concat("F Oscila");
+                diagnosysEl1.append("F Oscila");
                 break;
             case 0x8:
-                string.concat("F Servo");
+                diagnosysEl1.append("F Servo");
                 break;
         }
-        return string;
+        return diagnosysEl1.toString();
     }
 
     /**
@@ -425,21 +419,20 @@ public class Heliostat {
      * @return
      */
     public String diagnosysEl2ToString() {
-        String string = "";
+        StringBuilder diagnosysEl2 = new StringBuilder("Posición ");
         int coupleBits2 = 0x30 & diagnosysEL;
-        string.concat("Posición ");
         switch (coupleBits2) {
             case 0x0:
-                string.concat("OK");
+                diagnosysEl2.append("OK");
                 break;
             case 0x10:
-                string.concat("FCoeste");
+                diagnosysEl2.append("FCoeste");
                 break;
             case 0x20:
-                string.concat("FCeste");
+                diagnosysEl2.append("FCeste");
                 break;
         }
-        return string;
+        return diagnosysEl2.toString();
     }
 
     /**
@@ -448,20 +441,19 @@ public class Heliostat {
      * @return
      */
     public String diagnosysEl3ToString() {
-        String string = "";
+        StringBuilder diagnosysEl3 = new StringBuilder("Avisos ");
         int coupleBits3 = 0xc0 & diagnosysEL;
-        string.concat("Avisos ");
         switch (coupleBits3) {
             case 0x0:
-                string.concat("OK");
+                diagnosysEl3.append("OK");
                 break;
             case 0x40:
-                string.concat("Z_OK");
+                diagnosysEl3.append("Z_OK");
                 break;
             case 0x80:
-                string.concat("BA");
+                diagnosysEl3.append("BA");
                 break;
         }
-        return string;
+        return diagnosysEl3.toString();
     }
 }

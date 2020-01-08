@@ -29,6 +29,14 @@ public class FieldController {
         this.rows = rows;
     }
 
+    public Map<Integer, Row> getRows() {
+        return rows;
+    }
+
+    public void setRows(Map<Integer, Row> rows) {
+        this.rows = rows;
+    }
+
     /**
      * It targets a <code>Row</code> and an <code>Heliostat</code> to send and receive the poll bytes from it
      *
@@ -39,9 +47,8 @@ public class FieldController {
         row = rows.get(rowId);
         heliostat = row.getHeliostats().get(heliostatAddress);
         serialController = new SerialController(row.getPortDir());
-        serialController.open();
         sendPollerArray();
-        Thread.sleep(25); // check serial controller timeouts values
+        Thread.sleep(100);        ///////////////////////////////// check SerialController timeouts values
         receivePolledArray();
         serialController.close();
     }
@@ -50,6 +57,7 @@ public class FieldController {
      * Adds the <code>Heliostat</code> address and the poller bytes to a buffer and sends it
      */
     private void sendPollerArray() {
+        serialController.open();
         ByteBuffer byteBuffer = ByteBuffer.allocate(8);
         byteBuffer.put((byte) heliostat.getAddress());
         byteBuffer.put(POLL_ARRAY);
@@ -65,9 +73,8 @@ public class FieldController {
             setHelioState(receivedBuffer);
             row.getHeliostats().put(heliostat.getAddress(), heliostat);
         } else {
-            System.out.println("To do: Set failed coms");
-            //            buffer communication loss
-            //            setHelioState();
+            System.out.println("todo loss coms");
+            heliostat.setEvent(0x10);
         }
     }
 
@@ -115,20 +122,81 @@ public class FieldController {
      * @param heliostatAddress
      * @param command
      */
-    public void sendCommand(int rowId, int heliostatAddress, int command) {
-        Row row = rows.get(rowId);
-        Heliostat heliostat = row.getHeliostats().get(heliostatAddress);
-        SerialController serialController = new SerialController(row.getPortDir());
+    public void sendCommand(int rowId, int heliostatAddress, String command) throws InterruptedException {
+        row = rows.get(rowId);
+        heliostat = row.getHeliostats().get(heliostatAddress);
+        serialController = new SerialController(row.getPortDir());
         serialController.open();
-        ByteBuffer byteBuffer = ByteBuffer.allocate(16);
-        byteBuffer.put((byte) heliostat.getAddress());
-        byteBuffer.put(selectCommand(command));
-        serialController.send(byteBuffer.array());
+        sendCommandArray(command);
+        Thread.sleep(100);
+        if (serialController.getPort().bytesAvailable() > 0) {
+        } else {
+            System.out.println("todo loss coms");
+            heliostat.setEvent(0x10);
+        }
         serialController.close();
     }
 
-    private byte[] selectCommand(int command) {
-        return new byte[0];
+    /**
+     * Adds the <code>Heliostat</code> address and the command bytes to a buffer and sends it
+     *
+     * @param command
+     */
+    private void sendCommandArray(String command) {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(20);
+        byteBuffer.put((byte) heliostat.getAddress());
+        byteBuffer.put(new byte[]{16, 0, 0, 0, 1, 2, 0});
+        byteBuffer.put(selectCommand(command));
+        serialController.send(byteBuffer.array());
+    }
+
+    /**
+     * It switches between commands with no parameter needed
+     *
+     * @param command
+     * @return byte array with the function and
+     */
+    private byte[] selectCommand(String command) {
+        byte[] bytes = null;
+        switch (command) {
+            case "a":
+                bytes = new byte[]{(byte) 97, (byte) 103, (byte) 184};
+                break;
+            case "b":
+                bytes = new byte[]{(byte) 0x102, (byte) 0x38, (byte) 0x122};
+                break;
+            case "d":
+                bytes = new byte[]{(byte) 0x100, (byte) 0x167, (byte) 0x187};
+                break;
+            case "e":
+                bytes = new byte[]{(byte) 0x101, (byte) 0x102, (byte) 0x123};
+                break;
+            case "i":
+                bytes = new byte[]{(byte) 0x105, (byte) 0x102, (byte) 0x126};
+                break;
+            case "l":
+                bytes = new byte[]{(byte) 0x108, (byte) 0x166, (byte) 0x125};
+                break;
+            case "n":
+                bytes = new byte[]{(byte) 0x110, (byte) 0x39, (byte) 0x188};
+                break;
+            case "q":
+                bytes = new byte[]{(byte) 0x113, (byte) 0x102, (byte) 0x116};
+                break;
+            case "s":
+                bytes = new byte[]{(byte) 0x115, (byte) 0x231, (byte) 0x181};
+                break;
+        }
+        return bytes;
+    }
+
+    public void sendFocus(int rowId, int heliostatAddress, int n) {
+    }
+
+    public void sendFocus(int rowId, int heliostatAddress, long x, long y, long z) {
+    }
+
+    public void sendPosition(int rowId, int heliostatAddress, int az, int el) {
     }
 
 }

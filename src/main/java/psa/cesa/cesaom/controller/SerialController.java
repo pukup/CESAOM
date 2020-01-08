@@ -40,7 +40,11 @@ public class SerialController {
      * It tries to open the computer serial port.
      */
     public boolean open() {
-        return port.openPort();
+        if (port.openPort()) {
+            return true;
+        } else {
+            throw new RuntimeException("Couldn't open port " + port.toString());
+        }
     }
 
     /**
@@ -65,7 +69,11 @@ public class SerialController {
      * @return if the port has been closed truly
      */
     public boolean close() {
-        return port.closePort();
+        if (port.closePort()) {
+            return true;
+        } else {
+            throw new RuntimeException("Couldn't close port " + port.toString());
+        }
     }
 
     /**
@@ -97,6 +105,6 @@ public class SerialController {
         port.setNumDataBits(8);
         port.setParity(SerialPort.NO_PARITY);
         port.setNumStopBits(2);
-        //        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_SEMI_BLOCKING, 100, 100);
+//        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 250, 250);
     }
 }
