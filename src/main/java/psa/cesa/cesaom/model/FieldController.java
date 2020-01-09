@@ -19,7 +19,7 @@ public class FieldController {
      * @param heliostat
      * @param serialController contains the methods to control the jSerialComm api
      */
-    private static final byte[] POLL_ARRAY = {(byte) 0x03, (byte) 0x00, (byte) 0x10, (byte) 0x00, (byte) 0x08, (byte) 0x45, (byte) 0xC9};
+    private static final byte[] POLL_ARRAY = {3, 0, 16, 0, 8, 69, (byte) 201};
     private Map<Integer, Row> rows;
     private Row row;
     private Heliostat heliostat;
@@ -44,12 +44,11 @@ public class FieldController {
      * @param heliostatAddress represents the modbus slave address
      */
     public void poll(int rowId, int heliostatAddress) throws Exception {
-        row = rows.get(rowId);
-        heliostat = row.getHeliostats().get(heliostatAddress);
-        serialController = new SerialController(row.getPortDir());
+        selectHeliostat(rowId, heliostatAddress);
+        serialController.open();
         sendPollerArray();
         Thread.sleep(100);        ///////////////////////////////// check SerialController timeouts values
-        receivePolledArray();
+        checkPollResponse();
         serialController.close();
     }
 
@@ -57,7 +56,6 @@ public class FieldController {
      * Adds the <code>Heliostat</code> address and the poller bytes to a buffer and sends it
      */
     private void sendPollerArray() {
-        serialController.open();
         ByteBuffer byteBuffer = ByteBuffer.allocate(8);
         byteBuffer.put((byte) heliostat.getAddress());
         byteBuffer.put(POLL_ARRAY);
@@ -67,51 +65,14 @@ public class FieldController {
     /**
      * Checks the received bytes and uses <method>setHelioState</method> to set the <code>Heliostat</code> attributes
      */
-    private void receivePolledArray() {
-        if (serialController.getPort().bytesAvailable() > 0) {
-            ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
-            setHelioState(receivedBuffer);
-            row.getHeliostats().put(heliostat.getAddress(), heliostat);
-        } else {
-            System.out.println("todo loss coms");
+    private void checkPollResponse() {
+        if (serialController.getPort().bytesAvailable() < 1) {
             heliostat.setEvent(0x10);
-        }
-    }
-
-    /**
-     * Sets the <code>Heliostat</code> attributes
-     *
-     * @param receivedBuffer
-     */
-    private void setHelioState(ByteBuffer receivedBuffer) {
-        for (int i = 0; i < receivedBuffer.array().length; i++) {
-            Byte b = receivedBuffer.get(i);
-            switch (i) {
-                case 4:
-                    heliostat.setState(b);
-                    break;
-                case 6:
-                    heliostat.setEvent(b);
-                    break;
-                case 8:
-                    heliostat.setDiagnosysAZ(b);
-                    break;
-                case 10:
-                    heliostat.setDiagnosysEL(b);
-                    break;
-                case 12:
-                    heliostat.setPositionAZ(b);
-                    break;
-                case 14:
-                    heliostat.setPositionEL(b);
-                    break;
-                case 16:
-                    heliostat.setSetPointAZ(b);
-                    break;
-                case 18:
-                    heliostat.setSetPointEL(b);
-                    break;
-            }
+            throw new RuntimeException("El heliostato no responde al poll");
+        } else {
+            ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
+            heliostat.setAttributes(receivedBuffer);
+            row.getHeliostats().put(heliostat.getAddress(), heliostat); //???????¿?¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿??????????????
         }
     }
 
@@ -122,18 +83,12 @@ public class FieldController {
      * @param heliostatAddress
      * @param command
      */
-    public void sendCommand(int rowId, int heliostatAddress, String command) throws InterruptedException {
-        row = rows.get(rowId);
-        heliostat = row.getHeliostats().get(heliostatAddress);
-        serialController = new SerialController(row.getPortDir());
+    public void command(int rowId, int heliostatAddress, String command) throws InterruptedException {
         serialController.open();
+        selectHeliostat(rowId, heliostatAddress);
         sendCommandArray(command);
-        Thread.sleep(100);
-        if (serialController.getPort().bytesAvailable() > 0) {
-        } else {
-            System.out.println("todo loss coms");
-            heliostat.setEvent(0x10);
-        }
+        Thread.sleep(100);        ///////////////////////////////// check SerialController timeouts values
+        checkCommandResponse();
         serialController.close();
     }
 
@@ -145,7 +100,6 @@ public class FieldController {
     private void sendCommandArray(String command) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(20);
         byteBuffer.put((byte) heliostat.getAddress());
-        byteBuffer.put(new byte[]{16, 0, 0, 0, 1, 2, 0});
         byteBuffer.put(selectCommand(command));
         serialController.send(byteBuffer.array());
     }
@@ -160,37 +114,50 @@ public class FieldController {
         byte[] bytes = null;
         switch (command) {
             case "a":
-                bytes = new byte[]{(byte) 97, (byte) 103, (byte) 184};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 97, 103, (byte) 184};
                 break;
             case "b":
-                bytes = new byte[]{(byte) 0x102, (byte) 0x38, (byte) 0x122};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 102, 38, (byte) 122};
                 break;
             case "d":
-                bytes = new byte[]{(byte) 0x100, (byte) 0x167, (byte) 0x187};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 100, (byte) 167, (byte) 187};
                 break;
             case "e":
-                bytes = new byte[]{(byte) 0x101, (byte) 0x102, (byte) 0x123};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 101, 102, 123};
                 break;
             case "i":
-                bytes = new byte[]{(byte) 0x105, (byte) 0x102, (byte) 0x126};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 105, 102, 126};
                 break;
             case "l":
-                bytes = new byte[]{(byte) 0x108, (byte) 0x166, (byte) 0x125};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 108, (byte) 166, 125};
                 break;
             case "n":
-                bytes = new byte[]{(byte) 0x110, (byte) 0x39, (byte) 0x188};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 110, 39, (byte) 188};
                 break;
             case "q":
-                bytes = new byte[]{(byte) 0x113, (byte) 0x102, (byte) 0x116};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 113, 102, 116};
                 break;
             case "s":
-                bytes = new byte[]{(byte) 0x115, (byte) 0x231, (byte) 0x181};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 115, (byte) 231, (byte) 181};
                 break;
         }
         return bytes;
     }
 
-    public void sendFocus(int rowId, int heliostatAddress, int n) {
+    public void sendFocus(int rowId, int heliostatAddress, int n) throws InterruptedException {
+        selectHeliostat(rowId, heliostatAddress);
+        serialController.open();
+        sendFocusArray(n);
+        Thread.sleep(100);        ///////////////////////////////// check SerialController timeouts values
+        checkCommandResponse();
+        serialController.close();
+    }
+
+    private void sendFocusArray(int n) {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(20);
+        byteBuffer.put((byte) heliostat.getAddress());
+//                byteBuffer.put();
+        serialController.send(byteBuffer.array());
     }
 
     public void sendFocus(int rowId, int heliostatAddress, long x, long y, long z) {
@@ -199,4 +166,16 @@ public class FieldController {
     public void sendPosition(int rowId, int heliostatAddress, int az, int el) {
     }
 
+    private void selectHeliostat(int rowId, int heliostatAddress) {
+        row = rows.get(rowId);
+        heliostat = row.getHeliostats().get(heliostatAddress);
+        serialController = new SerialController(row.getPortDir());
+    }
+
+    private void checkCommandResponse() {
+        if (serialController.getPort().bytesAvailable() < 1) {
+            heliostat.setEvent(0x10);
+            throw new RuntimeException("El heliostato no responde");
+        }
+    }
 }

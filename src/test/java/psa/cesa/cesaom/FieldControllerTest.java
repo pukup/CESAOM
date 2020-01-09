@@ -1,17 +1,13 @@
 package psa.cesa.cesaom;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.xml.sax.SAXException;
-import psa.cesa.cesaom.controller.SerialController;
 import psa.cesa.cesaom.model.FieldController;
 import psa.cesa.cesaom.model.RowsReader;
-import psa.cesa.cesaom.model.dao.Heliostat;
 import psa.cesa.cesaom.model.dao.Row;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -56,7 +52,7 @@ class FieldControllerTest {
     @Test
     public void sendCommandTest(){
         try {
-            fieldController.sendCommand(1,1,"a");
+            fieldController.command(1,1,"a");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

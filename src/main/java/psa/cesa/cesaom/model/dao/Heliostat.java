@@ -1,5 +1,7 @@
 package psa.cesa.cesaom.model.dao;
 
+import java.nio.ByteBuffer;
+
 /**
  * DAO which represents a physical heliostat
  */
@@ -100,10 +102,40 @@ public class Heliostat {
     }
 
     /**
-     * @return the <code>Heliostat</code> address as string
+     * Sets the <code>Heliostat</code> attributes
+     *
+     * @param receivedBuffer
      */
-    public String getAddressString() {
-        return String.valueOf(address);
+    public void setAttributes(ByteBuffer receivedBuffer) {
+        for (int i = 0; i < receivedBuffer.array().length; i++) {
+            Byte b = receivedBuffer.get(i);
+            switch (i) {
+                case 4:
+                    setState(b);
+                    break;
+                case 6:
+                    setEvent(b);
+                    break;
+                case 8:
+                    setDiagnosysAZ(b);
+                    break;
+                case 10:
+                    setDiagnosysEL(b);
+                    break;
+                case 12:
+                    setPositionAZ(b);
+                    break;
+                case 14:
+                    setPositionEL(b);
+                    break;
+                case 16:
+                    setSetPointAZ(b);
+                    break;
+                case 18:
+                    setSetPointEL(b);
+                    break;
+            }
+        }
     }
 
     /**
@@ -269,7 +301,7 @@ public class Heliostat {
                 clock.append("Fallo del micro esclavo");
                 break;
             case 0x80:
-                clock.append("Fallo batería reloj BQ3287");
+                clock.append("Fallo batería");
                 break;
         }
         return clock.toString();
@@ -313,10 +345,10 @@ public class Heliostat {
                 diagnosysAz1.append("OK");
                 break;
             case 0x4:
-                diagnosysAz1.append("F Oscila");
+                diagnosysAz1.append("Fallo oscila");
                 break;
             case 0x8:
-                diagnosysAz1.append("F Servo");
+                diagnosysAz1.append("Fallo servo");
                 break;
         }
         return diagnosysAz1.toString();
@@ -335,10 +367,10 @@ public class Heliostat {
                 diagnosysAz2.append("OK");
                 break;
             case 0x10:
-                diagnosysAz2.append("FCoeste");
+                diagnosysAz2.append("Posición extrema oeste");
                 break;
             case 0x20:
-                diagnosysAz2.append("FCeste");
+                diagnosysAz2.append("Posición extrema este");
                 break;
         }
         return diagnosysAz2.toString();
@@ -350,17 +382,17 @@ public class Heliostat {
      * @return
      */
     public String diagnosysAz3ToString() {
-        StringBuilder diagnosysAz3 = new StringBuilder("Avisos ");
+        StringBuilder diagnosysAz3 = new StringBuilder("Aviso ");
         int coupleBits3 = 0xc0 & diagnosysAZ;
         switch (coupleBits3) {
             case 0x0:
                 diagnosysAz3.append("OK");
                 break;
             case 0x40:
-                diagnosysAz3.append("Z_OK");
+                diagnosysAz3.append("Cero encontrado");
                 break;
             case 0x80:
-                diagnosysAz3.append("BA");
+                diagnosysAz3.append("Banda ampliada");
                 break;
         }
         return diagnosysAz3.toString();
@@ -404,10 +436,10 @@ public class Heliostat {
                 diagnosysEl1.append("OK");
                 break;
             case 0x4:
-                diagnosysEl1.append("F Oscila");
+                diagnosysEl1.append("Fallo oscila");
                 break;
             case 0x8:
-                diagnosysEl1.append("F Servo");
+                diagnosysEl1.append("Fallo servo");
                 break;
         }
         return diagnosysEl1.toString();
@@ -426,10 +458,10 @@ public class Heliostat {
                 diagnosysEl2.append("OK");
                 break;
             case 0x10:
-                diagnosysEl2.append("FCoeste");
+                diagnosysEl2.append("Posición extrema oeste");
                 break;
             case 0x20:
-                diagnosysEl2.append("FCeste");
+                diagnosysEl2.append("Posición extrema este");
                 break;
         }
         return diagnosysEl2.toString();
@@ -441,17 +473,17 @@ public class Heliostat {
      * @return
      */
     public String diagnosysEl3ToString() {
-        StringBuilder diagnosysEl3 = new StringBuilder("Avisos ");
+        StringBuilder diagnosysEl3 = new StringBuilder("Aviso ");
         int coupleBits3 = 0xc0 & diagnosysEL;
         switch (coupleBits3) {
             case 0x0:
                 diagnosysEl3.append("OK");
                 break;
             case 0x40:
-                diagnosysEl3.append("Z_OK");
+                diagnosysEl3.append("Cero encontrado");
                 break;
             case 0x80:
-                diagnosysEl3.append("BA");
+                diagnosysEl3.append("Banda ampliada");
                 break;
         }
         return diagnosysEl3.toString();

@@ -36,7 +36,7 @@ class HeliostatTest {
         try {
             fieldController.poll(1, 1);
             Heliostat heliostat = fieldController.getRows().get(1).getHeliostats().get(1);
-
+            System.out.println(heliostat.getAddress());
             System.out.println(heliostat.state0ToString());
             System.out.println(heliostat.state1ToString());
             System.out.println(heliostat.eventOperationToString());
@@ -51,9 +51,12 @@ class HeliostatTest {
             System.out.println(heliostat.diagnosysEl1ToString());
             System.out.println(heliostat.diagnosysEl2ToString());
             System.out.println(heliostat.diagnosysEl3ToString());
+            System.out.println(heliostat.getPositionAZ());
+            System.out.println(heliostat.getPositionEL());
+            System.out.println(heliostat.getSetPointAZ());
+            System.out.println(heliostat.getSetPointEL());
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 }
