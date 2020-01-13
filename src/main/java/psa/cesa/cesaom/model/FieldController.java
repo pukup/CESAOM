@@ -19,7 +19,7 @@ public class FieldController {
      * @param heliostat
      * @param serialController contains the methods to control the jSerialComm api
      */
-    private static final byte[] POLL_ARRAY = {3, 0, 16, 0, 8, 69, (byte) 201};
+    private static final byte[] POLL_ARRAY = {0x03, 0x00, 0x10, 0x00, 0x08}; //fucking CRC
     private Map<Integer, Row> rows;
     private Row row;
     private Heliostat heliostat;
@@ -59,6 +59,8 @@ public class FieldController {
         ByteBuffer byteBuffer = ByteBuffer.allocate(8);
         byteBuffer.put((byte) heliostat.getAddress());
         byteBuffer.put(POLL_ARRAY);
+        byteBuffer.put(CRCCalculator.calculate(byteBuffer.array()));
+
         serialController.send(byteBuffer.array());
     }
 
@@ -68,12 +70,28 @@ public class FieldController {
     private void checkPollResponse() {
         if (serialController.getPort().bytesAvailable() < 1) {
             heliostat.setEvent(0x10);
-            throw new RuntimeException("El heliostato no responde al poll");
+            //            throw new RuntimeException("El heliostato no responde al poll");
         } else {
             ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
             heliostat.setAttributes(receivedBuffer);
-            row.getHeliostats().put(heliostat.getAddress(), heliostat); //???????¿?¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿??????????????
+            row.getHeliostats().put(heliostat.getAddress(), heliostat); //¿¿¿¿¿¿¿¿¿¿¿¿¿¿get devuelve otro objeto??????????????
         }
+    }
+
+    public void askHour(int rowId, int heliostatAddress) throws InterruptedException {
+        selectHeliostat(rowId, heliostatAddress);
+        serialController.open();
+        sendHourFrame();
+        Thread.sleep(100);
+        checkPollResponse();
+        serialController.close();
+    }
+
+    private void sendHourFrame() {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(8);
+        byteBuffer.put((byte) heliostat.getAddress());
+        byteBuffer.put(new byte[]{3, (byte) 218, 6, 69, (byte) 201});
+        serialController.send(byteBuffer.array());
     }
 
     /**
@@ -101,6 +119,7 @@ public class FieldController {
         ByteBuffer byteBuffer = ByteBuffer.allocate(20);
         byteBuffer.put((byte) heliostat.getAddress());
         byteBuffer.put(selectCommand(command));
+        byteBuffer.put(CRCCalculator.calculate(byteBuffer.array()));
         serialController.send(byteBuffer.array());
     }
 
@@ -114,31 +133,31 @@ public class FieldController {
         byte[] bytes = null;
         switch (command) {
             case "a":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 97, 103, (byte) 184};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 97};
                 break;
             case "b":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 102, 38, (byte) 122};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 102};
                 break;
             case "d":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 100, (byte) 167, (byte) 187};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 100};
                 break;
             case "e":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 101, 102, 123};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 101};
                 break;
             case "i":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 105, 102, 126};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 105};
                 break;
             case "l":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 108, (byte) 166, 125};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 108};
                 break;
             case "n":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 110, 39, (byte) 188};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 110};
                 break;
             case "q":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 113, 102, 116};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 113};
                 break;
             case "s":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 115, (byte) 231, (byte) 181};
+                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 115};
                 break;
         }
         return bytes;
@@ -156,7 +175,7 @@ public class FieldController {
     private void sendFocusArray(int n) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(20);
         byteBuffer.put((byte) heliostat.getAddress());
-//                byteBuffer.put();
+        //                byteBuffer.put();
         serialController.send(byteBuffer.array());
     }
 
@@ -175,7 +194,7 @@ public class FieldController {
     private void checkCommandResponse() {
         if (serialController.getPort().bytesAvailable() < 1) {
             heliostat.setEvent(0x10);
-            throw new RuntimeException("El heliostato no responde");
+            //            throw new RuntimeException("El heliostato no responde al comando");
         }
     }
 }
