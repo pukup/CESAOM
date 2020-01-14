@@ -32,7 +32,7 @@ class HeliostatTest {
     }
 
     @Test
-    void ToString() {
+    public void ToString() {
         try {
             fieldController.poll(1, 1);
             Heliostat heliostat = fieldController.getRows().get(1).getHeliostats().get(1);
@@ -56,6 +56,15 @@ class HeliostatTest {
             System.out.println(heliostat.getSetPointAZ());
             System.out.println(heliostat.getSetPointEL());
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void askHourTest(){
+        try {
+            fieldController.askHour(1, 1);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

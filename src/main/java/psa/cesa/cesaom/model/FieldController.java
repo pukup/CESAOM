@@ -20,6 +20,7 @@ public class FieldController {
      * @param serialController contains the methods to control the jSerialComm api
      */
     private static final byte[] POLL_ARRAY = {0x03, 0x00, 0x10, 0x00, 0x08}; //fucking CRC
+    private static final byte[] HOUR_ARRAY = {0x03, (byte) 0xDA, 0x00, 0x03}; //fucking CRC
     private Map<Integer, Row> rows;
     private Row row;
     private Heliostat heliostat;
@@ -59,8 +60,8 @@ public class FieldController {
         ByteBuffer byteBuffer = ByteBuffer.allocate(8);
         byteBuffer.put((byte) heliostat.getAddress());
         byteBuffer.put(POLL_ARRAY);
-        byteBuffer.put(CRCCalculator.calculate(byteBuffer.array()));
-
+        CRC.calculate(byteBuffer.array(), 6);
+        byteBuffer.put(CRC.calculate(byteBuffer.array(), 6));
         serialController.send(byteBuffer.array());
     }
 
@@ -76,22 +77,6 @@ public class FieldController {
             heliostat.setAttributes(receivedBuffer);
             row.getHeliostats().put(heliostat.getAddress(), heliostat); //¿¿¿¿¿¿¿¿¿¿¿¿¿¿get devuelve otro objeto??????????????
         }
-    }
-
-    public void askHour(int rowId, int heliostatAddress) throws InterruptedException {
-        selectHeliostat(rowId, heliostatAddress);
-        serialController.open();
-        sendHourFrame();
-        Thread.sleep(100);
-        checkPollResponse();
-        serialController.close();
-    }
-
-    private void sendHourFrame() {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(8);
-        byteBuffer.put((byte) heliostat.getAddress());
-        byteBuffer.put(new byte[]{3, (byte) 218, 6, 69, (byte) 201});
-        serialController.send(byteBuffer.array());
     }
 
     /**
@@ -116,10 +101,10 @@ public class FieldController {
      * @param command
      */
     private void sendCommandArray(String command) {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(20);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(11);
         byteBuffer.put((byte) heliostat.getAddress());
         byteBuffer.put(selectCommand(command));
-        byteBuffer.put(CRCCalculator.calculate(byteBuffer.array()));
+        byteBuffer.put(CRC.calculate(byteBuffer.array(), 9));
         serialController.send(byteBuffer.array());
     }
 
@@ -163,6 +148,40 @@ public class FieldController {
         return bytes;
     }
 
+    /**
+     * @param rowId
+     * @param heliostatAddress
+     * @throws InterruptedException
+     */
+    public void askHour(int rowId, int heliostatAddress) throws InterruptedException {
+        selectHeliostat(rowId, heliostatAddress);
+        serialController.open();
+        sendHourFrame();
+        Thread.sleep(100);
+        if (serialController.getPort().bytesAvailable() < 1) {
+            heliostat.setEvent(0x10);
+            //            throw new RuntimeException("El heliostato no responde al poll");
+        } else {
+            ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
+            for (byte bits:receivedBuffer.array()
+                 ) {
+                System.out.format("hora: 0x%h ", bits);
+            }
+        }
+        serialController.close();
+    }
+
+    /**
+     * It targets a <code>Row</code> and an <code>Heliostat</code> to ask 3 bytes from the 218 address which keeps hour
+     */
+    private void sendHourFrame() {
+        ByteBuffer byteBuffer = ByteBuffer.allocate(8);
+        byteBuffer.put((byte) heliostat.getAddress());
+        byteBuffer.put(HOUR_ARRAY);
+        byteBuffer.put(CRC.calculate(byteBuffer.array(), 5));
+        serialController.send(byteBuffer.array());
+    }
+
     public void sendFocus(int rowId, int heliostatAddress, int n) throws InterruptedException {
         selectHeliostat(rowId, heliostatAddress);
         serialController.open();
@@ -173,9 +192,10 @@ public class FieldController {
     }
 
     private void sendFocusArray(int n) {
-        ByteBuffer byteBuffer = ByteBuffer.allocate(20);
+        ByteBuffer byteBuffer = ByteBuffer.allocate(0);
         byteBuffer.put((byte) heliostat.getAddress());
-        //                byteBuffer.put();
+        //                        byteBuffer.put();
+//        CRC.calculate(byteBuffer.array());
         serialController.send(byteBuffer.array());
     }
 
