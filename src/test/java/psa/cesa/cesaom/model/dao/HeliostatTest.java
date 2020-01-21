@@ -1,6 +1,5 @@
 package psa.cesa.cesaom.model.dao;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,8 +9,6 @@ import psa.cesa.cesaom.model.RowsReader;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class HeliostatTest {
@@ -36,6 +33,7 @@ class HeliostatTest {
         try {
             fieldController.poll(1, 1);
             Heliostat heliostat = fieldController.getRows().get(1).getHeliostats().get(1);
+            //change prints for asserts
             System.out.println("address" + heliostat.getAddress());
             System.out.println(heliostat.state0ToString());
             System.out.println(heliostat.state1ToString());
@@ -63,7 +61,7 @@ class HeliostatTest {
     @Test
     public void askHourTest(){
         try {
-            fieldController.askHour(1, 1);
+            fieldController.getHour(1, 1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

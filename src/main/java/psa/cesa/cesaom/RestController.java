@@ -35,14 +35,30 @@ public class RestController {
         }
     }
 
-//    @RequestMapping(value = "/poll/{rowId}/{heliostatAddress}", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public Heliostat poll(@RequestParam(defaultValue = "1", name = "rowId") int rowId, @RequestParam(defaultValue = "1", name = "heliostatAddress") int heliostatAddress) {
-//        return fieldController.poll(rowId, heliostatAddress);
-//        //test
-//    }
+    /**
+     * @param rowId
+     * @param heliostatAddress
+     * @return
+     */
+    @RequestMapping(value = "/poll/{rowId}/{heliostatAddress}", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Heliostat poll(@RequestParam(defaultValue = "1", name = "rowId") int rowId, @RequestParam(defaultValue = "1", name = "heliostatAddress") int heliostatAddress) {
+        Heliostat heliostat = null;
+        try {
+            heliostat = fieldController.poll(rowId, heliostatAddress);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return heliostat;
+    }
 
     @RequestMapping(value = "/command", method = {RequestMethod.GET})
-    public String command(@RequestParam(defaultValue = "1") int rowId, @RequestParam(defaultValue = "1") int heliostatAddress) {
-        return String.valueOf(rowId);
+    public String command(@RequestParam(defaultValue = "1") int rowId, @RequestParam(defaultValue = "1") int heliostatAddress, @RequestParam(defaultValue = "a") String command) {
+        String response = "KO";
+        try {
+            response = (fieldController.command(rowId, heliostatAddress, command)) ? "OK" : "KO";
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 }

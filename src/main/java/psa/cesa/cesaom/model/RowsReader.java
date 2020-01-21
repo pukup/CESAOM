@@ -47,7 +47,7 @@ public class RowsReader {
      * @return HashMap containing <code>Heliostat</code> objects inside the xml row node
      */
     private static Map<Integer, Heliostat> getXmlHeliostats(Element xmlRow) {
-        NodeList xmlAddresses = xmlRow.getElementsByTagName("address");
+        NodeList xmlAddresses = xmlRow.getElementsByTagName("heliostat");
         Map<Integer, Heliostat> heliostats = new HashMap<>();
         for (int i = 0; i < xmlAddresses.getLength(); i++) {
             Element xmlAddress = (Element) xmlAddresses.item(i);

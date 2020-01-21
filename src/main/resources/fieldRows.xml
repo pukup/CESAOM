@@ -1,5 +1,5 @@
 <root>
-    <row id="1" dir="">
+    <row id="1" dir="/dev/ttyUSB0">
         <heliostat id="1"/>
         <heliostat id="2"/>
         <heliostat id="3"/>

@@ -19,8 +19,8 @@ public class FieldController {
      * @param heliostat
      * @param serialController contains the methods to control the jSerialComm api
      */
-    private static final byte[] POLL_ARRAY = {0x03, 0x00, 0x10, 0x00, 0x08}; //fucking CRC
-    private static final byte[] HOUR_ARRAY = {0x03, (byte) 0xDA, 0x00, 0x03}; //fucking CRC
+    private static final byte[] POLL_ARRAY = {0x03, 0x00, 0x10, 0x00, 0x08};
+    private static final byte[] HOUR_ARRAY = {0x03, 0x03, (byte) 0xEB, 0x00, 0x02};
     private Map<Integer, Row> rows;
     private Row row;
     private Heliostat heliostat;
@@ -44,13 +44,14 @@ public class FieldController {
      * @param rowId            represents the number or position of the row
      * @param heliostatAddress represents the modbus slave address
      */
-    public void poll(int rowId, int heliostatAddress) throws Exception {
+    public Heliostat poll(int rowId, int heliostatAddress) throws Exception {
         selectHeliostat(rowId, heliostatAddress);
         serialController.open();
         sendPollerArray();
-        Thread.sleep(100);        ///////////////////////////////// check SerialController timeouts values
+        Thread.sleep(100);
         checkPollResponse();
         serialController.close();
+        return heliostat;
     }
 
     /**
@@ -60,7 +61,6 @@ public class FieldController {
         ByteBuffer byteBuffer = ByteBuffer.allocate(8);
         byteBuffer.put((byte) heliostat.getAddress());
         byteBuffer.put(POLL_ARRAY);
-        CRC.calculate(byteBuffer.array(), 6);
         byteBuffer.put(CRC.calculate(byteBuffer.array(), 6));
         serialController.send(byteBuffer.array());
     }
@@ -68,14 +68,15 @@ public class FieldController {
     /**
      * Checks the received bytes and uses <method>setHelioState</method> to set the <code>Heliostat</code> attributes
      */
-    private void checkPollResponse() {
+    private Heliostat checkPollResponse() {
         if (serialController.getPort().bytesAvailable() < 1) {
             heliostat.setEvent(0x10);
-            //            throw new RuntimeException("El heliostato no responde al poll");
+            throw new RuntimeException("El heliostato no responde al poll");
         } else {
             ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
             heliostat.setAttributes(receivedBuffer);
-            row.getHeliostats().put(heliostat.getAddress(), heliostat); //¿¿¿¿¿¿¿¿¿¿¿¿¿¿get devuelve otro objeto??????????????
+            row.getHeliostats().put(heliostat.getAddress(), heliostat);
+            return heliostat;
         }
     }
 
@@ -86,13 +87,14 @@ public class FieldController {
      * @param heliostatAddress
      * @param command
      */
-    public void command(int rowId, int heliostatAddress, String command) throws InterruptedException {
-        serialController.open();
+    public boolean command(int rowId, int heliostatAddress, String command) throws InterruptedException {
         selectHeliostat(rowId, heliostatAddress);
+        serialController.open();
         sendCommandArray(command);
-        Thread.sleep(100);        ///////////////////////////////// check SerialController timeouts values
-        checkCommandResponse();
+        Thread.sleep(100);
+        boolean b = checkCommandResponse();
         serialController.close();
+        return b;
     }
 
     /**
@@ -148,12 +150,14 @@ public class FieldController {
         return bytes;
     }
 
+    //TO DO: setHour in the whole field
+
     /**
      * @param rowId
      * @param heliostatAddress
      * @throws InterruptedException
      */
-    public void askHour(int rowId, int heliostatAddress) throws InterruptedException {
+    public void getHour(int rowId, int heliostatAddress) throws InterruptedException {
         selectHeliostat(rowId, heliostatAddress);
         serialController.open();
         sendHourFrame();
@@ -163,9 +167,8 @@ public class FieldController {
             //            throw new RuntimeException("El heliostato no responde al poll");
         } else {
             ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
-            for (byte bits:receivedBuffer.array()
-                 ) {
-                System.out.format("hora: 0x%h ", bits);
+            for (byte bits : receivedBuffer.array()) {
+                System.out.format("0x%h ", bits);
             }
         }
         serialController.close();
@@ -178,24 +181,25 @@ public class FieldController {
         ByteBuffer byteBuffer = ByteBuffer.allocate(8);
         byteBuffer.put((byte) heliostat.getAddress());
         byteBuffer.put(HOUR_ARRAY);
-        byteBuffer.put(CRC.calculate(byteBuffer.array(), 5));
+        byteBuffer.put(CRC.calculate(byteBuffer.array(), 6));
         serialController.send(byteBuffer.array());
     }
 
-    public void sendFocus(int rowId, int heliostatAddress, int n) throws InterruptedException {
+    public boolean sendFocus(int rowId, int heliostatAddress, int n) throws InterruptedException {
         selectHeliostat(rowId, heliostatAddress);
         serialController.open();
         sendFocusArray(n);
-        Thread.sleep(100);        ///////////////////////////////// check SerialController timeouts values
-        checkCommandResponse();
+        Thread.sleep(100);
+        boolean bool = checkCommandResponse();
         serialController.close();
+        return bool;
     }
 
     private void sendFocusArray(int n) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(0);
         byteBuffer.put((byte) heliostat.getAddress());
         //                        byteBuffer.put();
-//        CRC.calculate(byteBuffer.array());
+        //        CRC.calculate(byteBuffer.array());
         serialController.send(byteBuffer.array());
     }
 
@@ -211,10 +215,12 @@ public class FieldController {
         serialController = new SerialController(row.getPortDir());
     }
 
-    private void checkCommandResponse() {
+    private boolean checkCommandResponse() {
         if (serialController.getPort().bytesAvailable() < 1) {
             heliostat.setEvent(0x10);
-            //            throw new RuntimeException("El heliostato no responde al comando");
+            throw new RuntimeException("El heliostato no responde al comando");
+        } else {
+            return true;
         }
     }
 }
