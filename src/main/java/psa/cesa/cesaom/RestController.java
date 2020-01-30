@@ -14,6 +14,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * It contains the api methods to act as an interface between the clients and the application itself
@@ -39,6 +40,26 @@ public class RestController {
     }
 
     /**
+     * @return
+     */
+    @RequestMapping(value = "/pollField", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Row> pollField() {
+        List<Row> rows = new ArrayList<>();
+        try {
+            for (Row row : fieldController.getRows().values()) {
+                for (Heliostat heliostat : row.getHeliostats().values()) {
+                    Heliostat heliostat1 = fieldController.poll(row.getId(), heliostat.getAddress());
+                    row.getHeliostats().put(heliostat1.getAddress(), heliostat1);
+                }
+                rows.add(row);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rows;
+    }
+
+    /**
      * @param rowId
      * @param heliostatAddress
      * @return
@@ -54,22 +75,12 @@ public class RestController {
         return heliostat;
     }
 
-    @RequestMapping(value = "/pollField", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Heliostat> pollField() {
-        List<Heliostat> heliostats = new ArrayList<>();
-        try {
-            for (Row row : fieldController.getRows().values()) {
-                for (Heliostat heliostat : row.getHeliostats().values()) {
-                    Heliostat heliostat1 = fieldController.poll(row.getId(), heliostat.getAddress());
-                    heliostats.add(heliostat1);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return heliostats;
-    }
-
+    /**
+     * @param rowId
+     * @param heliostatAddress
+     * @param command
+     * @return
+     */
     @RequestMapping(value = "/command", method = {RequestMethod.GET})
     public String command(@RequestParam(defaultValue = "1") int rowId, @RequestParam(defaultValue = "1") int heliostatAddress, @RequestParam(defaultValue = "a") String command) {
         String response = "KO";
