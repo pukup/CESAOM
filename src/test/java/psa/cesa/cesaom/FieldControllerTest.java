@@ -50,6 +50,15 @@ class FieldControllerTest {
     }
 
     @Test
+    public void printReceivedBuffer(){
+        try {
+            System.out.println(fieldController.printReceivedBuffer(1, 1));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void sendCommandTest(){
         try {
             fieldController.command(1,1,"a");

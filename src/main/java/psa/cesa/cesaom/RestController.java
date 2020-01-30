@@ -8,9 +8,12 @@ import org.xml.sax.SAXException;
 import psa.cesa.cesaom.model.FieldController;
 import psa.cesa.cesaom.model.RowsReader;
 import psa.cesa.cesaom.model.dao.Heliostat;
+import psa.cesa.cesaom.model.dao.Row;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * It contains the api methods to act as an interface between the clients and the application itself
@@ -49,6 +52,22 @@ public class RestController {
             e.printStackTrace();
         }
         return heliostat;
+    }
+
+    @RequestMapping(value = "/pollField", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Heliostat> pollField() {
+        List<Heliostat> heliostats = new ArrayList<>();
+        try {
+            for (Row row : fieldController.getRows().values()) {
+                for (Heliostat heliostat : row.getHeliostats().values()) {
+                    Heliostat heliostat1 = fieldController.poll(row.getId(), heliostat.getAddress());
+                    heliostats.add(heliostat1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return heliostats;
     }
 
     @RequestMapping(value = "/command", method = {RequestMethod.GET})

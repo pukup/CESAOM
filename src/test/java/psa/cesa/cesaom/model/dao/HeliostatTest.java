@@ -3,12 +3,15 @@ package psa.cesa.cesaom.model.dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
 import org.xml.sax.SAXException;
 import psa.cesa.cesaom.model.FieldController;
 import psa.cesa.cesaom.model.RowsReader;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class HeliostatTest {
@@ -33,22 +36,21 @@ class HeliostatTest {
         try {
             fieldController.poll(1, 1);
             Heliostat heliostat = fieldController.getRows().get(1).getHeliostats().get(1);
-            //change prints for asserts
-            System.out.println("address" + heliostat.getAddress());
-            System.out.println(heliostat.state0ToString());
+            assertEquals(1, heliostat.getAddress());
+            assertEquals("Abatimiento normal", heliostat.state0ToString());
             System.out.println(heliostat.state1ToString());
-            System.out.println(heliostat.eventOperationToString());
-            System.out.println(heliostat.eventSecurityToString());
+            assertEquals("Operación OK", heliostat.eventOperationToString());
+            assertEquals("Seguridad OK", heliostat.eventSecurityToString());
             System.out.println(heliostat.eventComToString());
-            System.out.println(heliostat.eventCLToString());
-            System.out.println(heliostat.diagnosysAz0ToString());
-            System.out.println(heliostat.diagnosysAz1ToString());
-            System.out.println(heliostat.diagnosysAz2ToString());
-            System.out.println(heliostat.diagnosysAz3ToString());
-            System.out.println(heliostat.diagnosysEl0ToString());
-            System.out.println(heliostat.diagnosysEl1ToString());
-            System.out.println(heliostat.diagnosysEl2ToString());
-            System.out.println(heliostat.diagnosysEl3ToString());
+            assertEquals("Reloj OK", heliostat.eventCLToString());
+            assertEquals("Movimiento OK", heliostat.diagnosysAz0ToString());
+            assertEquals("Oscilación Fallo servo", heliostat.diagnosysAz1ToString());
+            assertEquals("Posición OK", heliostat.diagnosysAz2ToString());
+            assertEquals("Aviso OK", heliostat.diagnosysAz3ToString());
+            assertEquals("Movimiento OK", heliostat.diagnosysEl0ToString());
+            assertEquals("Oscilación Fallo servo", heliostat.diagnosysEl1ToString());
+            assertEquals("Posición OK", heliostat.diagnosysEl2ToString());
+            assertEquals("Aviso Cero encontrado", heliostat.diagnosysEl3ToString());
             System.out.println(heliostat.getPositionAZ());
             System.out.println(heliostat.getPositionEL());
             System.out.println(heliostat.getSetPointAZ());
@@ -59,7 +61,7 @@ class HeliostatTest {
     }
 
     @Test
-    public void askHourTest(){
+    public void askHourTest() {
         try {
             fieldController.getHour(1, 1);
         } catch (InterruptedException e) {

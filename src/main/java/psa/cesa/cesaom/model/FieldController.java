@@ -81,6 +81,30 @@ public class FieldController {
     }
 
     /**
+     * Checks the received bytes and put them into a string
+     *
+     * @param rowId
+     * @param heliostatAddress
+     * @throws InterruptedException
+     */
+    public String printReceivedBuffer(int rowId, int heliostatAddress) throws InterruptedException {
+        StringBuffer s = new StringBuffer("| ");
+        selectHeliostat(rowId, heliostatAddress);
+        serialController.open();
+        sendPollerArray();
+        Thread.sleep(100);
+        if (serialController.getPort().bytesAvailable() < 1) {
+            s.append("No contesta");
+        } else {
+            ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
+            for (byte b : receivedBuffer.array()) {
+                s.append(String.format("%02x ", b));
+            }
+        } serialController.close();
+        return s.toString();
+    }
+
+    /**
      * It targets a <code>Row</code> and an <code>Heliostat</code> to send commands
      *
      * @param rowId

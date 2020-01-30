@@ -488,4 +488,5 @@ public class Heliostat {
         }
         return diagnosysEl3.toString();
     }
+
 }
