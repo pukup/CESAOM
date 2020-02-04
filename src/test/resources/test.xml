@@ -1,12 +1,12 @@
 <root>
-    <row id="1" dir="/dev/ttyUSB0">
+    <comLine id="1" dir="/dev/ttyUSB0">
         <heliostat id="1"/>
         <heliostat id="2"/>
         <heliostat id="3"/>
-    </row>
-    <row id="2" dir="/dev/ttyUSB0">
+    </comLine>
+    <comLine id="2" dir="/dev/ttyUSB0">
         <heliostat id="1"/>
         <heliostat id="2"/>
         <heliostat id="3"/>
-    </row>
+    </comLine>
 </root>

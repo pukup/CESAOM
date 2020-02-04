@@ -6,9 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.xml.sax.SAXException;
+import psa.cesa.cesaom.model.ComLinesReader;
 import psa.cesa.cesaom.model.FieldController;
-import psa.cesa.cesaom.model.RowsReader;
-import psa.cesa.cesaom.model.dao.Row;
+import psa.cesa.cesaom.model.dao.ComLine;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import java.util.Map;
 class FieldControllerTest {
 
     @Mock
-    Map<Integer, Row> rows = new HashMap<>();
+    Map<Integer, ComLine> rows = new HashMap<>();
 
     @InjectMocks
     FieldController fieldController;
@@ -27,7 +27,7 @@ class FieldControllerTest {
     @BeforeEach
     public void setup() {
         try {
-            rows = RowsReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("test.xml"));
+            rows = ComLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("test.xml"));
             fieldController = new FieldController(rows);
         } catch (ParserConfigurationException e) {
             e.printStackTrace();

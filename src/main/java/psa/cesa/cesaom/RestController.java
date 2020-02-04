@@ -5,19 +5,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.xml.sax.SAXException;
+import psa.cesa.cesaom.model.ComLinesReader;
 import psa.cesa.cesaom.model.FieldController;
-import psa.cesa.cesaom.model.RowsReader;
 import psa.cesa.cesaom.model.dao.Heliostat;
-import psa.cesa.cesaom.model.dao.Row;
+import psa.cesa.cesaom.model.dao.ComLine;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
- * It contains the api methods to act as an interface between the clients and the application itself
+ * It contains the REST server methods for giving HTTP access to clients.
  */
 @org.springframework.web.bind.annotation.RestController
 public class RestController {
@@ -27,9 +26,12 @@ public class RestController {
      */
     private FieldController fieldController;
 
+    /**
+     * Initializes a <code>FieldsController</code> object for getting access to its methods.
+     */
     public RestController() {
         try {
-            fieldController = new FieldController(RowsReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("fieldRows.xml")));
+            fieldController = new FieldController(ComLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("fieldComLines.xml")));
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -40,23 +42,35 @@ public class RestController {
     }
 
     /**
-     * @return
+     * @return A List including all the rows from the xml file
+     */
+    @RequestMapping(value = "/loadField", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<ComLine> loadField() {
+        List<ComLine> comLines = new ArrayList<>();
+        for (ComLine comLine : fieldController.getComLines().values()) {
+            comLines.add(comLine);
+        }
+        return comLines;
+    }
+
+    /**
+     * @return A list with all <code>ComLine</code> objects and all its <code>Heliostat</code> objects values
      */
     @RequestMapping(value = "/pollField", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Row> pollField() {
-        List<Row> rows = new ArrayList<>();
+    public List<ComLine> pollField() {
+        List<ComLine> comLines = new ArrayList<>();
         try {
-            for (Row row : fieldController.getRows().values()) {
-                for (Heliostat heliostat : row.getHeliostats().values()) {
-                    Heliostat heliostat1 = fieldController.poll(row.getId(), heliostat.getAddress());
-                    row.getHeliostats().put(heliostat1.getAddress(), heliostat1);
+            for (ComLine comLine : fieldController.getComLines().values()) {
+                for (Heliostat heliostat : comLine.getHeliostats().values()) {
+                    Heliostat heliostat1 = fieldController.poll(comLine.getId(), heliostat.getAddress());
+                    comLine.getHeliostats().put(heliostat1.getAddress(), heliostat1);
                 }
-                rows.add(row);
+                comLines.add(comLine);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return rows;
+        return comLines;
     }
 
     /**

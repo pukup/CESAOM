@@ -3,25 +3,25 @@ package psa.cesa.cesaom.model.dao;
 import java.nio.ByteBuffer;
 
 /**
- * DAO which represents a physical heliostat
+ * DAO which represents a physical heliostat.
  */
 public class Heliostat {
     /**
-     * @param address Represents the modbus slave address
-     * @param state Static and dynamic positions representation
-     * @param event Operation, security, communications and such events
-     * @param diagnosisAz Axis diagnosis
-     * @param diagnosisEl Axis diagnosis
-     * @param positionAz Actual azimuth position
-     * @param positionEL Actual elevation position
-     * @param setPointAZ Azimuth set point
-     * @param setPointEL Elevation set point
+     * @param address Represents the modbus slave address.
+     * @param state Static and dynamic positions representation.
+     * @param event Operation, security, communications and such events.
+     * @param diagnosisAz Axis diagnosis.
+     * @param diagnosisEl Axis diagnosis.
+     * @param positionAz Actual azimuth position.
+     * @param positionEL Actual elevation position.
+     * @param setPointAZ Azimuth set point.
+     * @param setPointEL Elevation set point.
      */
 
     private int address;
     private int state;
     private int event;
-    private int diagnosysAZ, diagnosysEL;
+    private int diagnosisAZ, diagnosisEL;
     private int positionAZ, positionEL;
     private int setPointAZ, setPointEL;
 
@@ -54,19 +54,19 @@ public class Heliostat {
     }
 
     public int getDiagnosysAZ() {
-        return diagnosysAZ;
+        return diagnosisAZ;
     }
 
-    public void setDiagnosysAZ(int diagnosysAZ) {
-        this.diagnosysAZ = diagnosysAZ;
+    public void setDiagnosysAZ(int diagnosisAZ) {
+        this.diagnosisAZ = diagnosisAZ;
     }
 
     public int getDiagnosysEL() {
-        return diagnosysEL;
+        return diagnosisEL;
     }
 
-    public void setDiagnosysEL(int diagnosysEL) {
-        this.diagnosysEL = diagnosysEL;
+    public void setDiagnosysEL(int diagnosisEL) {
+        this.diagnosisEL = diagnosisEL;
     }
 
     public int getPositionAZ() {
@@ -102,9 +102,9 @@ public class Heliostat {
     }
 
     /**
-     * Sets the <code>Heliostat</code> attributes
+     * Sets the <code>Heliostat</code> attributes by separating the modbus frame into individual bytes.
      *
-     * @param receivedBuffer
+     * @param receivedBuffer bytes frame from the modbus RTU.
      */
     public void setAttributes(ByteBuffer receivedBuffer) {
         for (int i = 0; i < receivedBuffer.array().length; i++) {
@@ -139,9 +139,9 @@ public class Heliostat {
     }
 
     /**
-     * Converts the least significant nibble from state byte to a string message
+     * Converts the least significant nibble from state byte to a string message.
      *
-     * @return string static position message
+     * @return static position message.
      */
     public String state0ToString() {
         StringBuilder state0 = new StringBuilder();
@@ -200,9 +200,9 @@ public class Heliostat {
     }
 
     /**
-     * Converts the most significant nibble from state byte to a string message
+     * Converts the most significant nibble from state byte to a string message.
      *
-     * @return string dynamic position message
+     * @return dynamic position message.
      */
     public String state1ToString() {
         StringBuilder state1 = new StringBuilder();
@@ -223,9 +223,9 @@ public class Heliostat {
     }
 
     /**
-     * Converts the two least significant bits from event byte to a string message
+     * Converts the two least significant bits from event byte to a string message.
      *
-     * @return string operation event message
+     * @return operation event message.
      */
     public String eventOperationToString() {
         StringBuilder operation = new StringBuilder("Operación ");
@@ -245,9 +245,9 @@ public class Heliostat {
     }
 
     /**
-     * Converts the bits at position 2 and 3 from event byte to a string message
+     * Converts the bits at position 2 and 3 from event byte to a string message.
      *
-     * @return string security event message
+     * @return security event message.
      */
     public String eventSecurityToString() {
         StringBuilder security = new StringBuilder("Seguridad ");
@@ -264,9 +264,9 @@ public class Heliostat {
     }
 
     /**
-     * Converts the bits at position 4 and 5 from event byte to a string message
+     * Converts the bits at position 4 and 5 from event byte to a string message.
      *
-     * @return string communications event message
+     * @return communications event message.
      */
     public String eventComToString() {
         StringBuilder communications = new StringBuilder("Comunicaciones ");
@@ -286,9 +286,9 @@ public class Heliostat {
     }
 
     /**
-     * Converts the bits at position 6 and 7 from event byte to a string message
+     * Converts the bits at position 6 and 7 from event byte to a string message.
      *
-     * @return string clock event message
+     * @return clock event message.
      */
     public String eventCLToString() {
         StringBuilder clock = new StringBuilder("Reloj ");
@@ -308,185 +308,185 @@ public class Heliostat {
     }
 
     /**
-     * Converts the two least significant bits from diagnosysAZ byte to a string message
+     * Converts the two least significant bits from diagnosis azimuth byte to a string message.
      *
-     * @return
+     * @return diagnosis azimuth message.
      */
-    public String diagnosysAz0ToString() {
-        StringBuilder diagnosysAz0 = new StringBuilder("Movimiento ");
-        int coupleBits0 = 0x3 & diagnosysAZ;
+    public String diagnosisAz0ToString() {
+        StringBuilder diagnosisAz0 = new StringBuilder("Movimiento ");
+        int coupleBits0 = 0x3 & diagnosisAZ;
         switch (coupleBits0) {
             case 0x0:
-                diagnosysAz0.append("OK");
+                diagnosisAz0.append("OK");
                 break;
             case 0x1:
-                diagnosysAz0.append("No mueve con motor ON");
+                diagnosisAz0.append("No mueve con motor ON");
                 break;
             case 0x2:
-                diagnosysAz0.append("Mueve con motor OFF");
+                diagnosisAz0.append("Mueve con motor OFF");
                 break;
             case 0x3:
-                diagnosysAz0.append("Gira al revés");
+                diagnosisAz0.append("Gira al revés");
                 break;
         }
-        return diagnosysAz0.toString();
+        return diagnosisAz0.toString();
     }
 
     /**
-     * Converts the bits at position 2 and 3 from diagnosysAZ byte to a string message
+     * Converts the bits at position 2 and 3 from diagnosisAZ byte to a string message.
      *
-     * @return
+     * @return diagnosis azimuth message.
      */
-    public String diagnosysAz1ToString() {
-        StringBuilder diagnosysAz1 = new StringBuilder("Oscilación ");
-        int coupleBits1 = 0xc & diagnosysAZ;
+    public String diagnosisAz1ToString() {
+        StringBuilder diagnosisAz1 = new StringBuilder("Oscilación ");
+        int coupleBits1 = 0xc & diagnosisAZ;
         switch (coupleBits1) {
             case 0x0:
-                diagnosysAz1.append("OK");
+                diagnosisAz1.append("OK");
                 break;
             case 0x4:
-                diagnosysAz1.append("Fallo oscila");
+                diagnosisAz1.append("Fallo oscila");
                 break;
             case 0x8:
-                diagnosysAz1.append("Fallo servo");
+                diagnosisAz1.append("Fallo servo");
                 break;
         }
-        return diagnosysAz1.toString();
+        return diagnosisAz1.toString();
     }
 
     /**
-     * Converts the bits at position 4 and 5 from diagnosysAZ byte to a string message
+     * Converts the bits at position 4 and 5 from diagnosisAZ byte to a string message.
      *
-     * @return
+     * @return diagnosis azimuth message.
      */
-    public String diagnosysAz2ToString() {
-        StringBuilder diagnosysAz2 = new StringBuilder("Posición ");
-        int coupleBits2 = 0x30 & diagnosysAZ;
+    public String diagnosisAz2ToString() {
+        StringBuilder diagnosisAz2 = new StringBuilder("Posición ");
+        int coupleBits2 = 0x30 & diagnosisAZ;
         switch (coupleBits2) {
             case 0x0:
-                diagnosysAz2.append("OK");
+                diagnosisAz2.append("OK");
                 break;
             case 0x10:
-                diagnosysAz2.append("Posición extrema oeste");
+                diagnosisAz2.append("Posición extrema oeste");
                 break;
             case 0x20:
-                diagnosysAz2.append("Posición extrema este");
+                diagnosisAz2.append("Posición extrema este");
                 break;
         }
-        return diagnosysAz2.toString();
+        return diagnosisAz2.toString();
     }
 
     /**
-     * Converts the bits at position 6 and 7 from diagnosysAZ byte to a string message
+     * Converts the bits at position 6 and 7 from diagnosis azimuth byte to a string message.
      *
-     * @return
+     * @return diagnosis azimuth message.
      */
-    public String diagnosysAz3ToString() {
-        StringBuilder diagnosysAz3 = new StringBuilder("Aviso ");
-        int coupleBits3 = 0xc0 & diagnosysAZ;
+    public String diagnosisAz3ToString() {
+        StringBuilder diagnosisAz3 = new StringBuilder("Aviso ");
+        int coupleBits3 = 0xc0 & diagnosisAZ;
         switch (coupleBits3) {
             case 0x0:
-                diagnosysAz3.append("OK");
+                diagnosisAz3.append("OK");
                 break;
             case 0x40:
-                diagnosysAz3.append("Cero encontrado");
+                diagnosisAz3.append("Cero encontrado");
                 break;
             case 0x80:
-                diagnosysAz3.append("Banda ampliada");
+                diagnosisAz3.append("Banda ampliada");
                 break;
         }
-        return diagnosysAz3.toString();
+        return diagnosisAz3.toString();
     }
 
     /**
-     * Converts the two least significant bits from diagnosysEL byte to a string message
+     * Converts the two least significant bits from diagnosis elevation byte to a string message.
      *
-     * @return
+     * @return diagnosis elevation message.
      */
-    public String diagnosysEl0ToString() {
-        StringBuilder diagnosysEl0 = new StringBuilder("Movimiento ");
-        int coupleBits0 = 0x3 & diagnosysEL;
+    public String diagnosisEl0ToString() {
+        StringBuilder diagnosisEl0 = new StringBuilder("Movimiento ");
+        int coupleBits0 = 0x3 & diagnosisEL;
         switch (coupleBits0) {
             case 0x0:
-                diagnosysEl0.append("OK");
+                diagnosisEl0.append("OK");
                 break;
             case 0x1:
-                diagnosysEl0.append("No mueve con motor ON");
+                diagnosisEl0.append("No mueve con motor ON");
                 break;
             case 0x2:
-                diagnosysEl0.append("Mueve con motor OFF");
+                diagnosisEl0.append("Mueve con motor OFF");
                 break;
             case 0x3:
-                diagnosysEl0.append("Gira al revés");
+                diagnosisEl0.append("Gira al revés");
                 break;
         }
-        return diagnosysEl0.toString();
+        return diagnosisEl0.toString();
     }
 
     /**
-     * Converts the bits at position 2 and 3 from diagnosysEL byte to a string message
+     * Converts the bits at position 2 and 3 from diagnosis elevation byte to a string message.
      *
-     * @return
+     * @return diagnosis elevation message.
      */
-    public String diagnosysEl1ToString() {
-        StringBuilder diagnosysEl1 = new StringBuilder("Oscilación ");
-        int coupleBits1 = 0xc & diagnosysEL;
+    public String diagnosisEl1ToString() {
+        StringBuilder diagnosisEl1 = new StringBuilder("Oscilación ");
+        int coupleBits1 = 0xc & diagnosisEL;
         switch (coupleBits1) {
             case 0x0:
-                diagnosysEl1.append("OK");
+                diagnosisEl1.append("OK");
                 break;
             case 0x4:
-                diagnosysEl1.append("Fallo oscila");
+                diagnosisEl1.append("Fallo oscila");
                 break;
             case 0x8:
-                diagnosysEl1.append("Fallo servo");
+                diagnosisEl1.append("Fallo servo");
                 break;
         }
-        return diagnosysEl1.toString();
+        return diagnosisEl1.toString();
     }
 
     /**
-     * Converts the bits at position 4 and 5 from diagnosysEL byte to a string message
+     * Converts the bits at position 4 and 5 from diagnosis elevation byte to a string message.
      *
-     * @return
+     * @return diagnosis elevation message.
      */
-    public String diagnosysEl2ToString() {
-        StringBuilder diagnosysEl2 = new StringBuilder("Posición ");
-        int coupleBits2 = 0x30 & diagnosysEL;
+    public String diagnosisEl2ToString() {
+        StringBuilder diagnosisEl2 = new StringBuilder("Posición ");
+        int coupleBits2 = 0x30 & diagnosisEL;
         switch (coupleBits2) {
             case 0x0:
-                diagnosysEl2.append("OK");
+                diagnosisEl2.append("OK");
                 break;
             case 0x10:
-                diagnosysEl2.append("Posición extrema oeste");
+                diagnosisEl2.append("Posición extrema oeste");
                 break;
             case 0x20:
-                diagnosysEl2.append("Posición extrema este");
+                diagnosisEl2.append("Posición extrema este");
                 break;
         }
-        return diagnosysEl2.toString();
+        return diagnosisEl2.toString();
     }
 
     /**
-     * Converts the bits at position 6 and 7 from diagnosysEL byte to a string message
+     * Converts the bits at position 6 and 7 from diagnosis elevation byte to a string message.
      *
-     * @return
+     * @return diagnosis elevation message.
      */
-    public String diagnosysEl3ToString() {
-        StringBuilder diagnosysEl3 = new StringBuilder("Aviso ");
-        int coupleBits3 = 0xc0 & diagnosysEL;
+    public String diagnosisEl3ToString() {
+        StringBuilder diagnosisEl3 = new StringBuilder("Aviso ");
+        int coupleBits3 = 0xc0 & diagnosisEL;
         switch (coupleBits3) {
             case 0x0:
-                diagnosysEl3.append("OK");
+                diagnosisEl3.append("OK");
                 break;
             case 0x40:
-                diagnosysEl3.append("Cero encontrado");
+                diagnosisEl3.append("Cero encontrado");
                 break;
             case 0x80:
-                diagnosysEl3.append("Banda ampliada");
+                diagnosisEl3.append("Banda ampliada");
                 break;
         }
-        return diagnosysEl3.toString();
+        return diagnosisEl3.toString();
     }
 
 }

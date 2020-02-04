@@ -3,7 +3,7 @@ package psa.cesa.cesaom.controller;
 import com.fazecast.jSerialComm.SerialPort;
 
 /**
- * Manages the JSerialComm API
+ * Manages the JSerialComm API.
  * <p>
  * Its methods identify serial ports, so as send and receive bytes through them.
  */
@@ -15,7 +15,7 @@ public class SerialController {
     private SerialPort port;
 
     /**
-     * @param portDir serial port computer address
+     * @param portDir serial port computer address.
      */
     public SerialController(String portDir) {
         this.port = SerialPort.getCommPort(portDir);
@@ -23,7 +23,7 @@ public class SerialController {
     }
 
     /**
-     * @param baudRate    Signal's changes per second
+     * @param baudRate    Signal's changes per second.
      * @param numDataBits
      * @param parity
      * @param numStopBits
@@ -37,7 +37,7 @@ public class SerialController {
     }
 
     /**
-     * It tries to open the computer serial port.
+     * It tries to open the OS serial port.
      */
     public boolean open() {
         if (port.openPort()) {
@@ -48,7 +48,7 @@ public class SerialController {
     }
 
     /**
-     * It sends bytes through the port
+     * It sends bytes through the port.
      *
      * @param pollerFrame
      */
@@ -57,7 +57,7 @@ public class SerialController {
     }
 
     /**
-     * It receive bytes through the port
+     * It receive bytes through the port.
      */
     public byte[] receive() {
         byte[] polledFrame = new byte[port.bytesAvailable()];
@@ -66,7 +66,7 @@ public class SerialController {
     }
 
     /**
-     * @return if the port has been closed truly
+     * @return if the port has been closed truly.
      */
     public boolean close() {
         if (port.closePort()) {
@@ -77,7 +77,7 @@ public class SerialController {
     }
 
     /**
-     * @return
+     * @return the API serial port.
      */
     public SerialPort getPort() {
         return this.port;
@@ -86,19 +86,19 @@ public class SerialController {
     /**
      * Returns the computer serial ports.
      *
-     * @return ports
+     * @return the ports from OS.
      */
     public static SerialPort[] getPorts() {
         return SerialPort.getCommPorts();
     }
 
     /**
-     * It assigns specific values to the port attributes
+     * It assigns specific values to the port attributes.
      * <p>
-     * baudRate=19200
-     * numDataBits=8
-     * parity=NO_PARITY
-     * numStopBits=2
+     * baudRate=19200.
+     * numDataBits=8.
+     * parity=NO_PARITY.
+     * numStopBits=2.
      */
     private void assignDefaultValues() {
         port.setBaudRate(19200);
