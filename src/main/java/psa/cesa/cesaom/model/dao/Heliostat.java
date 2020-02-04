@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
  */
 public class Heliostat {
     /**
-     * @param address Represents the modbus slave address.
+     * @param id Represents the modbus slave address.
      * @param state Static and dynamic positions representation.
      * @param event Operation, security, communications and such events.
      * @param diagnosisAz Axis diagnosis.
@@ -18,23 +18,23 @@ public class Heliostat {
      * @param setPointEL Elevation set point.
      */
 
-    private int address;
+    private int id;
     private int state;
     private int event;
     private int diagnosisAZ, diagnosisEL;
     private int positionAZ, positionEL;
     private int setPointAZ, setPointEL;
 
-    public Heliostat(int address) {
-        this.address = address;
+    public Heliostat(int id) {
+        this.id = id;
     }
 
-    public int getAddress() {
-        return address;
+    public int getId() {
+        return id;
     }
 
-    public void setAddress(int address) {
-        this.address = address;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getState() {

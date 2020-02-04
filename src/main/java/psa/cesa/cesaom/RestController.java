@@ -22,7 +22,7 @@ import java.util.List;
 public class RestController {
 
     /**
-     * @param fieldController contains methods for poll and command <code>Heliostat</code>
+     * @param fieldController contains methods for polling and commanding <code>Heliostat</code> objects.
      */
     private FieldController fieldController;
 
@@ -42,7 +42,7 @@ public class RestController {
     }
 
     /**
-     * @return A List including all the rows from the xml file
+     * @return All the <code>ComLine</code> objects from the xml file.
      */
     @RequestMapping(value = "/loadField", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ComLine> loadField() {
@@ -54,7 +54,7 @@ public class RestController {
     }
 
     /**
-     * @return A list with all <code>ComLine</code> objects and all its <code>Heliostat</code> objects values
+     * @return All <code>ComLine</code> objects and all its <code>Heliostat</code> objects values
      */
     @RequestMapping(value = "/pollField", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<ComLine> pollField() {
@@ -62,8 +62,8 @@ public class RestController {
         try {
             for (ComLine comLine : fieldController.getComLines().values()) {
                 for (Heliostat heliostat : comLine.getHeliostats().values()) {
-                    Heliostat heliostat1 = fieldController.poll(comLine.getId(), heliostat.getAddress());
-                    comLine.getHeliostats().put(heliostat1.getAddress(), heliostat1);
+                    Heliostat heliostat1 = fieldController.poll(comLine.getId(), heliostat.getId());
+                    comLine.getHeliostats().put(heliostat1.getId(), heliostat1);
                 }
                 comLines.add(comLine);
             }
@@ -74,15 +74,17 @@ public class RestController {
     }
 
     /**
-     * @param rowId
-     * @param heliostatAddress
+     * It sends a polling byte frame with modbus function code 03, <code>ComLine</code> id, <code>Heliostat</code> id, and CRC.
+     *
+     * @param comLineId   the <code>ComLine</code>> modbus id.
+     * @param heliostatId the <code>Heliostat</code> modbus id.
      * @return
      */
-    @RequestMapping(value = "/poll/{rowId}/{heliostatAddress}", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Heliostat poll(@RequestParam(defaultValue = "1", name = "rowId") int rowId, @RequestParam(defaultValue = "1", name = "heliostatAddress") int heliostatAddress) {
+    @RequestMapping(value = "/poll/{comLineId}/{heliostatId}", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Heliostat poll(@RequestParam int comLineId, @RequestParam int heliostatId) {
         Heliostat heliostat = null;
         try {
-            heliostat = fieldController.poll(rowId, heliostatAddress);
+            heliostat = fieldController.poll(comLineId, heliostatId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,16 +92,18 @@ public class RestController {
     }
 
     /**
-     * @param rowId
-     * @param heliostatAddress
-     * @param command
+     * It sends a command byte frame with modbus function code 16, <code>ComLine</code> id, <code>Heliostat</code> id, ASCII command, and CRC.
+     *
+     * @param comLineId   the <code>ComLine</code>> modbus id.
+     * @param heliostatId the <code>Heliostat</code> modbus id.
+     * @param command     the ASCII value of the command.
      * @return
      */
     @RequestMapping(value = "/command", method = {RequestMethod.GET})
-    public String command(@RequestParam(defaultValue = "1") int rowId, @RequestParam(defaultValue = "1") int heliostatAddress, @RequestParam(defaultValue = "a") String command) {
-        String response = "KO";
+    public String command(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam String command) {
+        String response = null;
         try {
-            response = (fieldController.command(rowId, heliostatAddress, command)) ? "OK" : "KO";
+            response = (fieldController.command(comLineId, heliostatId, command)) ? "Received" : "Not received";
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

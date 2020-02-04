@@ -58,7 +58,7 @@ public class FieldController {
      */
     private void sendPollerArray() {
         ByteBuffer byteBuffer = ByteBuffer.allocate(8);
-        byteBuffer.put((byte) heliostat.getAddress());
+        byteBuffer.put((byte) heliostat.getId());
         byteBuffer.put(POLL_ARRAY);
         byteBuffer.put(CRC.calculate(byteBuffer.array(), 6));
         serialController.send(byteBuffer.array());
@@ -70,11 +70,11 @@ public class FieldController {
     private Heliostat checkPollResponse() {
         if (serialController.getPort().bytesAvailable() < 1) {
             heliostat.setEvent(0x10);
-            //            throw new RuntimeException("El heliostato " + heliostat.getAddress() + " no responde al poll");
+//            throw new RuntimeException("El heliostato " + heliostat.getAddress() + " no responde al poll");
         } else {
             ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
             heliostat.setAttributes(receivedBuffer);
-            comLine.getHeliostats().put(heliostat.getAddress(), heliostat);
+            comLine.getHeliostats().put(heliostat.getId(), heliostat);
         }
         serialController.close();
         return heliostat;
@@ -125,51 +125,52 @@ public class FieldController {
     /**
      * Adds the <code>Heliostat</code> address and the command bytes to a buffer and sends it.
      *
-     * @param command
+     * @param command ASCII representation to switch between different commands.
      */
     private void sendCommandArray(String command) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(11);
-        byteBuffer.put((byte) heliostat.getAddress());
+        byteBuffer.put((byte) heliostat.getId());
         byteBuffer.put(selectCommand(command));
         byteBuffer.put(CRC.calculate(byteBuffer.array(), 9));
         serialController.send(byteBuffer.array());
     }
 
     /**
-     * It switches between commands with no extra parameters needed.
+     * It adds modbus function code 16 byte, <code>ComLine</code> id, <code>Heliostat</code> id, and one ASCII command selected from the switch case.
+     * It adds switches between commands with no extra parameters needed.
      *
-     * @param command
+     * @param command the ASCII value of the command.
      * @return byte array with the function and the command.
      */
     private byte[] selectCommand(String command) {
-        byte[] bytes = null;
+        byte[] bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 0};
         switch (command) {
             case "a":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 97};
+                bytes[7] = 97;
                 break;
             case "b":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 102};
+                bytes[7] = 102;
                 break;
             case "d":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 100};
+                bytes[7] = 100;
                 break;
             case "e":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 101};
+                bytes[7] = 101;
                 break;
             case "i":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 105};
+                bytes[7] = 105;
                 break;
             case "l":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 108};
+                bytes[7] = 108;
                 break;
             case "n":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 110};
+                bytes[7] = 110;
                 break;
             case "q":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 113};
+                bytes[7] = 113;
                 break;
             case "s":
-                bytes = new byte[]{16, 0, 0, 0, 1, 2, 0, 115};
+                bytes[7] = 115;
                 break;
         }
         return bytes;
@@ -204,7 +205,7 @@ public class FieldController {
      */
     private void sendHourFrame() {
         ByteBuffer byteBuffer = ByteBuffer.allocate(8);
-        byteBuffer.put((byte) heliostat.getAddress());
+        byteBuffer.put((byte) heliostat.getId());
         byteBuffer.put(HOUR_ARRAY);
         byteBuffer.put(CRC.calculate(byteBuffer.array(), 6));
         serialController.send(byteBuffer.array());
@@ -232,7 +233,7 @@ public class FieldController {
      */
     private void sendFocusArray(int n) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(0);
-        byteBuffer.put((byte) heliostat.getAddress());
+        byteBuffer.put((byte) heliostat.getId());
         //                        byteBuffer.put();
         //        CRC.calculate(byteBuffer.array());
         serialController.send(byteBuffer.array());

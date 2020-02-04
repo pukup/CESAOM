@@ -39,7 +39,7 @@ class ComLinesReaderTests {
         try {
             Map<Integer, ComLine> rows = ComLinesReader.getXmlRows(inputStream);
             Heliostat heliostat = rows.get(1).getHeliostats().get(1);
-            assertEquals(1, heliostat.getAddress());
+            assertEquals(1, heliostat.getId());
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {

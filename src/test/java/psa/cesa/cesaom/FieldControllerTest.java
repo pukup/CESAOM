@@ -1,15 +1,18 @@
 package psa.cesa.cesaom;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.util.Assert;
 import org.xml.sax.SAXException;
 import psa.cesa.cesaom.model.ComLinesReader;
 import psa.cesa.cesaom.model.FieldController;
 import psa.cesa.cesaom.model.dao.ComLine;
 
+import javax.validation.constraints.AssertTrue;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -39,7 +42,7 @@ class FieldControllerTest {
     }
 
     @Test
-    public void FieldControllerTest(){
+    public void FieldControllerTest() {
         try {
             fieldController.poll(1, 1);
         } catch (InterruptedException e) {
@@ -50,7 +53,7 @@ class FieldControllerTest {
     }
 
     @Test
-    public void printReceivedBuffer(){
+    public void printReceivedBuffer() {
         try {
             System.out.println(fieldController.printReceivedBuffer(1, 1));
         } catch (InterruptedException e) {
@@ -59,9 +62,9 @@ class FieldControllerTest {
     }
 
     @Test
-    public void sendCommandTest(){
+    public void sendCommandTest() {
         try {
-            fieldController.command(1,1,"a");
+            Assertions.assertTrue(fieldController.command(1,1,"a"));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
