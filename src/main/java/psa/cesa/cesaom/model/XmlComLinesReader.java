@@ -16,9 +16,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A <code>ComLinesReader</code> contains functionality to parse xml nodes into <code>ComLine</code> objects
+ * A <code>XmlComLinesReader</code> contains functionality to parse xml nodes into communication lines represented as <code>ComLine</code> objects
  */
-public class ComLinesReader {
+public class XmlComLinesReader {
+
+    /**
+     * @param OS Keeps the operation system of the computer.
+     */
+    private static String OS = null;
 
     /**
      * It parses a xml file into a <code>HashMap</code> which contains the field's <code>Comline</code> objects.
@@ -37,7 +42,7 @@ public class ComLinesReader {
         for (int i = 0; i < xmlRows.getLength(); i++) {
             Element xmlComLines = (Element) xmlRows.item(i);
             int comLineId = Integer.valueOf(xmlComLines.getAttribute("id"));
-            String portDir = xmlComLines.getAttribute("dir");
+            String portDir = getPortDir(xmlComLines);
             ComLine comLine = new ComLine(comLineId, portDir, getXmlHeliostats(xmlComLines));
             comLines.put(comLineId, comLine);
         }
@@ -76,4 +81,24 @@ public class ComLinesReader {
         }
         return heliostats;
     }
+
+    private static String getPortDir(Element xmlComLines) {
+        if (isLinux()) {
+            return xmlComLines.getAttribute("linuxDir");
+        } else {
+            return xmlComLines.getAttribute("winDir");
+        }
+    }
+
+    private static boolean isLinux() {
+        return getOsName().startsWith("Linux");
+    }
+
+    private static String getOsName() {
+        if (OS == null) {
+            OS = System.getProperty("os.name");
+        }
+        return OS;
+    }
+
 }

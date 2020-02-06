@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.xml.sax.SAXException;
-import psa.cesa.cesaom.model.FieldController;
-import psa.cesa.cesaom.model.ComLinesReader;
+import psa.cesa.cesaom.controller.FieldController;
+import psa.cesa.cesaom.model.XmlComLinesReader;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
@@ -20,7 +20,7 @@ class HeliostatTest {
     @BeforeEach
     public void setup() {
         try {
-            fieldController = new FieldController(ComLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("test.xml")));
+            fieldController = new FieldController(XmlComLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("test.xml")));
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {

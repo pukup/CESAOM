@@ -105,6 +105,6 @@ public class SerialController {
         port.setNumDataBits(8);
         port.setParity(SerialPort.NO_PARITY);
         port.setNumStopBits(2);
-        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 250, 250);
+        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 100, 100);
     }
 }

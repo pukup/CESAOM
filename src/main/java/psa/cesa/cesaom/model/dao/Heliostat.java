@@ -110,7 +110,7 @@ public class Heliostat {
         for (int i = 0; i < receivedBuffer.array().length; i++) {
             Byte b = receivedBuffer.get(i);
             switch (i) {
-                case 4:
+                case 4 :
                     setState(b);
                     break;
                 case 6:
@@ -271,6 +271,7 @@ public class Heliostat {
     public String eventComToString() {
         StringBuilder communications = new StringBuilder("Comunicaciones ");
         int coupleBits2 = 0x30 & event;
+        communications.append(event);
         switch (coupleBits2) {
             case 0x0:
                 communications.append("OK");

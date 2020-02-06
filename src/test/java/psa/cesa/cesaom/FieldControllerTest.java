@@ -6,13 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
 import org.xml.sax.SAXException;
-import psa.cesa.cesaom.model.ComLinesReader;
-import psa.cesa.cesaom.model.FieldController;
+import psa.cesa.cesaom.model.XmlComLinesReader;
+import psa.cesa.cesaom.controller.FieldController;
 import psa.cesa.cesaom.model.dao.ComLine;
+import psa.cesa.cesaom.model.dao.Heliostat;
 
-import javax.validation.constraints.AssertTrue;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -30,7 +29,7 @@ class FieldControllerTest {
     @BeforeEach
     public void setup() {
         try {
-            rows = ComLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("test.xml"));
+            rows = XmlComLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("test.xml"));
             fieldController = new FieldController(rows);
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
@@ -42,20 +41,11 @@ class FieldControllerTest {
     }
 
     @Test
-    public void FieldControllerTest() {
-        try {
-            fieldController.poll(1, 1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Test
     public void printReceivedBuffer() {
         try {
-            System.out.println(fieldController.printReceivedBuffer(1, 1));
+            Heliostat heliostat = fieldController.poll(1, 1);
+            System.out.println(fieldController.printReceivedBuffer());
+            Assertions.assertEquals("Comunicaciones OK", heliostat.eventComToString());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -64,7 +54,7 @@ class FieldControllerTest {
     @Test
     public void sendCommandTest() {
         try {
-            Assertions.assertTrue(fieldController.command(1,1,"a"));
+            Assertions.assertTrue(fieldController.command(1, 1, "a"));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

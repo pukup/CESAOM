@@ -1,6 +1,7 @@
-package psa.cesa.cesaom.model;
+package psa.cesa.cesaom.controller;
 
 import psa.cesa.cesaom.controller.SerialController;
+import psa.cesa.cesaom.model.CRC;
 import psa.cesa.cesaom.model.dao.ComLine;
 import psa.cesa.cesaom.model.dao.Heliostat;
 
@@ -25,6 +26,7 @@ public class FieldController {
     private ComLine comLine;
     private Heliostat heliostat;
     private SerialController serialController;
+    private ByteBuffer receivedBuffer;
 
     public FieldController(Map<Integer, ComLine> comLines) {
         this.comLines = comLines;
@@ -41,15 +43,16 @@ public class FieldController {
     /**
      * It targets a <code>ComLine</code> and an <code>Heliostat</code> to send and receive the poll bytes from it.
      *
-     * @param comLineId        represents the number or position of the comLine.
-     * @param heliostatAddress represents the modbus slave address.
+     * @param comLineId   represents the number or position of the comLine.
+     * @param heliostatId represents the modbus slave address.
      */
-    public Heliostat poll(int comLineId, int heliostatAddress) throws Exception {
-        selectHeliostat(comLineId, heliostatAddress);
+    public Heliostat poll(int comLineId, int heliostatId) throws InterruptedException {
+        selectHeliostat(comLineId, heliostatId);
         serialController.open();
         sendPollerArray();
         Thread.sleep(100);
         checkPollResponse();
+        serialController.close(); //                            ¿?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         return heliostat;
     }
 
@@ -65,43 +68,33 @@ public class FieldController {
     }
 
     /**
-     * Checks the received bytes and uses <method>setHelioState</method> to set the <code>Heliostat</code> attributes.
+     * Checks The received bytes and uses <method>setHelioState</method> to set the <code>Heliostat</code> attributes.
      */
-    private Heliostat checkPollResponse() {
+    private void checkPollResponse() {
         if (serialController.getPort().bytesAvailable() < 1) {
             heliostat.setEvent(0x10);
-//            throw new RuntimeException("El heliostato " + heliostat.getAddress() + " no responde al poll");
         } else {
-            ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
+            receivedBuffer = ByteBuffer.wrap(serialController.receive());
             heliostat.setAttributes(receivedBuffer);
             comLine.getHeliostats().put(heliostat.getId(), heliostat);
         }
-        serialController.close();
-        return heliostat;
     }
 
     /**
      * Checks the received bytes and put them into a string.
      *
-     * @param comLineId
-     * @param heliostatAddress
      * @throws InterruptedException
      */
-    public String printReceivedBuffer(int comLineId, int heliostatAddress) throws InterruptedException {
-        StringBuffer s = new StringBuffer("| ");
-        selectHeliostat(comLineId, heliostatAddress);
-        serialController.open();
-        sendPollerArray();
-        Thread.sleep(100);
-        if (serialController.getPort().bytesAvailable() < 1) {
-            s.append("No contesta");
+    public String printReceivedBuffer() throws InterruptedException {
+        StringBuffer s = new StringBuffer("Received: ");
+        if (receivedBuffer == null) {
+            s.append("x");
         } else {
-            ByteBuffer receivedBuffer = ByteBuffer.wrap(serialController.receive());
             for (byte b : receivedBuffer.array()) {
                 s.append(String.format("%02x ", b));
+                //                s.append(" " + b);
             }
         }
-        serialController.close();
         return s.toString();
     }
 
@@ -109,11 +102,11 @@ public class FieldController {
      * It targets a <code>ComLine</code> and an <code>Heliostat</code> to send commands.
      *
      * @param comLineId
-     * @param heliostatAddress
+     * @param heliostatId
      * @param command
      */
-    public boolean command(int comLineId, int heliostatAddress, String command) throws InterruptedException {
-        selectHeliostat(comLineId, heliostatAddress);
+    public boolean command(int comLineId, int heliostatId, String command) throws InterruptedException {
+        selectHeliostat(comLineId, heliostatId);
         serialController.open();
         sendCommandArray(command);
         Thread.sleep(100);
@@ -137,7 +130,18 @@ public class FieldController {
 
     /**
      * It adds modbus function code 16 byte, <code>ComLine</code> id, <code>Heliostat</code> id, and one ASCII command selected from the switch case.
+     * <p>
      * It adds switches between commands with no extra parameters needed.
+     * <p>
+     * "a" Dejection.
+     * "b" Down security aisle.
+     * "d" Kilter tracking.
+     * "e" Boiler focus.
+     * "i" Immobilize.
+     * "l" Out of service.
+     * "n" Normal tracking.
+     * "q" Emergency focus.
+     * "s" Kilter tracking throw security aisle.
      *
      * @param command the ASCII value of the command.
      * @return byte array with the function and the command.
@@ -180,11 +184,11 @@ public class FieldController {
 
     /**
      * @param comLineID
-     * @param heliostatAddress
+     * @param heliostatId
      * @throws InterruptedException
      */
-    public void getHour(int comLineID, int heliostatAddress) throws InterruptedException {
-        selectHeliostat(comLineID, heliostatAddress);
+    public void getHour(int comLineID, int heliostatId) throws InterruptedException {
+        selectHeliostat(comLineID, heliostatId);
         serialController.open();
         sendHourFrame();
         Thread.sleep(100);
@@ -213,13 +217,13 @@ public class FieldController {
 
     /**
      * @param comLineId
-     * @param heliostatAddress
+     * @param heliostatId
      * @param n
      * @return
      * @throws InterruptedException
      */
-    public boolean sendFocus(int comLineId, int heliostatAddress, int n) throws InterruptedException {
-        selectHeliostat(comLineId, heliostatAddress);
+    public boolean sendFocus(int comLineId, int heliostatId, int n) throws InterruptedException {
+        selectHeliostat(comLineId, heliostatId);
         serialController.open();
         sendFocusArray(n);
         Thread.sleep(100);
@@ -260,11 +264,11 @@ public class FieldController {
 
     /**
      * @param rowId
-     * @param heliostatAddress
+     * @param heliostatId
      */
-    private void selectHeliostat(int rowId, int heliostatAddress) {
+    private void selectHeliostat(int rowId, int heliostatId) {
         comLine = comLines.get(rowId);
-        heliostat = comLine.getHeliostats().get(heliostatAddress);
+        heliostat = comLine.getHeliostats().get(heliostatId);
         serialController = new SerialController(comLine.getPortDir());
     }
 

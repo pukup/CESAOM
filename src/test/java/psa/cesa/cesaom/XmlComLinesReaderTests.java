@@ -3,7 +3,7 @@ package psa.cesa.cesaom;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.xml.sax.SAXException;
-import psa.cesa.cesaom.model.ComLinesReader;
+import psa.cesa.cesaom.model.XmlComLinesReader;
 import psa.cesa.cesaom.model.dao.ComLine;
 import psa.cesa.cesaom.model.dao.Heliostat;
 
@@ -15,13 +15,13 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
-class ComLinesReaderTests {
+class XmlComLinesReaderTests {
 
     @Test
     void getXmlRowsTest() {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("test.xml");
         try {
-            Map<Integer, ComLine> rows = ComLinesReader.getXmlRows(inputStream);
+            Map<Integer, ComLine> rows = XmlComLinesReader.getXmlRows(inputStream);
             assertEquals(1, rows.get(1).getId());
             assertEquals("/dev/ttyUSB0", rows.get(1).getPortDir());
         } catch (ParserConfigurationException e) {
@@ -37,7 +37,7 @@ class ComLinesReaderTests {
     void getXmlGeliostatsTest() {
         InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream("test.xml");
         try {
-            Map<Integer, ComLine> rows = ComLinesReader.getXmlRows(inputStream);
+            Map<Integer, ComLine> rows = XmlComLinesReader.getXmlRows(inputStream);
             Heliostat heliostat = rows.get(1).getHeliostats().get(1);
             assertEquals(1, heliostat.getId());
         } catch (ParserConfigurationException e) {
