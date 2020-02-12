@@ -1,6 +1,5 @@
 package psa.cesa.cesaom.controller;
 
-import psa.cesa.cesaom.controller.SerialController;
 import psa.cesa.cesaom.model.CRC;
 import psa.cesa.cesaom.model.dao.ComLine;
 import psa.cesa.cesaom.model.dao.Heliostat;
@@ -36,24 +35,25 @@ public class FieldController {
         return comLines;
     }
 
-    public void setComLines(Map<Integer, ComLine> comLines) {
-        this.comLines = comLines;
-    }
-
     /**
      * It targets a <code>ComLine</code> and an <code>Heliostat</code> to send and receive the poll bytes from it.
      *
      * @param comLineId   represents the number or position of the comLine.
      * @param heliostatId represents the modbus slave address.
      */
-    public Heliostat poll(int comLineId, int heliostatId) throws InterruptedException {
-        selectHeliostat(comLineId, heliostatId);
-        serialController.open();
-        sendPollerArray();
-        Thread.sleep(100);
-        checkPollResponse();
-        serialController.close(); //                            ¿?!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        return heliostat;
+    public Heliostat pollOne(int comLineId, int heliostatId) {
+        try {
+            selectHeliostat(comLineId, heliostatId);
+            serialController.open();
+            sendPollerArray();
+            Thread.sleep(100);
+            checkPollResponse();
+            serialController.close();
+            return heliostat;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -92,7 +92,6 @@ public class FieldController {
         } else {
             for (byte b : receivedBuffer.array()) {
                 s.append(String.format("%02x ", b));
-                //                s.append(" " + b);
             }
         }
         return s.toString();

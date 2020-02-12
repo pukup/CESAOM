@@ -82,6 +82,12 @@ public class XmlComLinesReader {
         return heliostats;
     }
 
+    /**
+     * Chooses between Linux and windows ports directions.
+     *
+     * @param xmlComLines
+     * @return the OS serial port direction.
+     */
     private static String getPortDir(Element xmlComLines) {
         if (isLinux()) {
             return xmlComLines.getAttribute("linuxDir");
@@ -90,15 +96,15 @@ public class XmlComLinesReader {
         }
     }
 
+    /**
+     * Checks the OS name.
+     *
+     * @return if the OS is linux.
+     */
     private static boolean isLinux() {
-        return getOsName().startsWith("Linux");
-    }
-
-    private static String getOsName() {
         if (OS == null) {
             OS = System.getProperty("os.name");
         }
-        return OS;
+        return OS.startsWith("Linux");
     }
-
 }

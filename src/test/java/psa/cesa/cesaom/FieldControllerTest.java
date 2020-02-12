@@ -7,8 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.xml.sax.SAXException;
-import psa.cesa.cesaom.model.XmlComLinesReader;
 import psa.cesa.cesaom.controller.FieldController;
+import psa.cesa.cesaom.model.XmlComLinesReader;
 import psa.cesa.cesaom.model.dao.ComLine;
 import psa.cesa.cesaom.model.dao.Heliostat;
 
@@ -43,7 +43,7 @@ class FieldControllerTest {
     @Test
     public void printReceivedBuffer() {
         try {
-            Heliostat heliostat = fieldController.poll(1, 1);
+            Heliostat heliostat = fieldController.pollOne(1, 1);
             System.out.println(fieldController.printReceivedBuffer());
             Assertions.assertEquals("Comunicaciones OK", heliostat.eventComToString());
         } catch (InterruptedException e) {
