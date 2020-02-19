@@ -1,4 +1,4 @@
-package psa.cesa.cesaom;
+package psa.cesa.cesaom.controller;
 
 import com.fazecast.jSerialComm.SerialPort;
 import org.junit.jupiter.api.Assertions;
@@ -8,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import psa.cesa.cesaom.controller.SerialController;
 
 @SpringBootTest
 public class SerialControllerTest {

@@ -4,8 +4,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import psa.cesa.cesaom.model.dao.ComLine;
-import psa.cesa.cesaom.model.dao.Heliostat;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -16,9 +14,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * A <code>XmlComLinesReader</code> contains functionality to parse xml nodes into communication lines represented as <code>ComLine</code> objects
+ * A <code>XmlLinesReader</code> contains functionality to parse xml nodes into communication lines represented as <code>ComLine</code> objects
  */
-public class XmlComLinesReader {
+public class XmlLinesReader {
 
     /**
      * @param OS Keeps the operation system of the computer.
@@ -75,9 +73,9 @@ public class XmlComLinesReader {
         Map<Integer, Heliostat> heliostats = new HashMap<>();
         for (int i = 0; i < xmlAddresses.getLength(); i++) {
             Element xmlAddress = (Element) xmlAddresses.item(i);
-            int heliostatAddress = Integer.valueOf(xmlAddress.getAttribute("id"));
-            Heliostat heliostat = new Heliostat(heliostatAddress);
-            heliostats.put(heliostatAddress, heliostat);
+            int heliostatId = Integer.valueOf(xmlAddress.getAttribute("id"));
+            Heliostat heliostat = new Heliostat(heliostatId);
+            heliostats.put(heliostatId, heliostat);
         }
         return heliostats;
     }

@@ -14,6 +14,7 @@ public class CRC {
 
     /**
      * It gets a byte frame and selects a high and a low order byte from the tables of CRC values.
+     *
      * @param data modbus frame without crc
      * @param len  number of bytes for crc calculation
      * @return

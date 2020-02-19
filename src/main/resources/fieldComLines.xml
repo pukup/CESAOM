@@ -22,6 +22,7 @@
     </comLine>
     <comLine id="15" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">
         <heliostat id="109"/>
+        <heliostat id="110"/>
         <heliostat id="111"/>
         <heliostat id="112"/>
         <heliostat id="113"/>

@@ -1,5 +1,4 @@
-
-package psa.cesa.cesaom.model.dao;
+package psa.cesa.cesaom.model;
 
 import java.util.Map;
 
@@ -29,6 +28,7 @@ public class ComLine {
     public int getId() {
         return id;
     }
+
     public void setId(int id) {
         this.id = id;
     }

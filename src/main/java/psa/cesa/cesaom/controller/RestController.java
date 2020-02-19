@@ -1,19 +1,18 @@
 package psa.cesa.cesaom.controller;
 
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.xml.sax.SAXException;
-import psa.cesa.cesaom.model.XmlComLinesReader;
-import psa.cesa.cesaom.model.dao.ComLine;
-import psa.cesa.cesaom.model.dao.Heliostat;
+import psa.cesa.cesaom.model.ComLine;
+import psa.cesa.cesaom.model.XmlLinesReader;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 
 /**
@@ -24,24 +23,28 @@ public class RestController {
 
     /**
      * @param fieldController contains methods for polling and commanding <code>Heliostat</code> objects.
+     * @param timerPollControllers contains one <code>TimerTask</code> for every <code>ComLine</code>.
+     * @param timers contains one <code>Timer</code> for every <code>ComLine</code>.
      */
     private FieldController fieldController;
-    private TimerPollController[] timerPollControllers;
-    private Timer timer;
+    private Map<Integer, TimerPollTask> timerPollTasks;
+    private Map<Integer, Timer> timers;
 
     /**
      * Initializes a <code>FieldController</code> object to gain access to its methods.
      * <p>
-     * Initializes a <code>TimerPollController</code> array with its size equal to the number of <code>ComLines</code>.
+     * Initializes a <code>TimerPollController</code> Map with its size equal to the number of <code>ComLines</code>.
      * <p>
-     * Initializes a <code>Timer</code> and launches scheduled <code>TimerPollController</code> objects within the array.
+     * Initializes a <code>Timer</code> Map with <code>TimerPollController</code> objects within it.
+     * <p>
+     * Calls <method>setTimerPollControllers</method>
      */
     public RestController() {
         try {
-            fieldController = new FieldController(XmlComLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("fieldComLines.xml")));
-            timerPollControllers = new TimerPollController[fieldController.getComLines().size()];
-            timer = new Timer("pollTimer");
-            pollStart();
+            fieldController = new FieldController(XmlLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("fieldComLines.xml")));
+            timers = new HashMap<>();
+            timerPollTasks = new HashMap<>();
+            setTimerPollControllers();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -51,39 +54,24 @@ public class RestController {
         }
     }
 
-    private void pollStart() {
-        int i = 0;
+    /**
+     * It fills the Maps with its respective objects and schedule the <code>TimerPollControllers</code>.
+     */
+    private void setTimerPollControllers() {
         for (ComLine comLine : fieldController.getComLines().values()) {
-            timerPollControllers[i] = new TimerPollController(fieldController, comLine.getId());
-            timer.schedule(timerPollControllers[i], new Date(), 10000);
-            i++;
+            timers.put(comLine.getId(), new Timer(String.valueOf(comLine.getId())));
+            timerPollTasks.put(comLine.getId(), new TimerPollTask(comLine.getId(), fieldController));
+            timers.get(comLine.getId()).schedule(timerPollTasks.get(comLine.getId()), new Date(), 20000);
         }
     }
 
     /**
-     * @return All the <code>ComLine</code> objects from the xml file.
+     * @return All <code>ComLine</code> objects and all its <code>Heliostat</code> objects values
      */
-    @RequestMapping(value = "/getComLines", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ComLine> getComLines() {
-        List<ComLine> comLines = new ArrayList<>();
-        for (ComLine comLine : fieldController.getComLines().values()) {
-            comLines.add(comLine);
-        }
-        return comLines;
-    }
-
-    /**
-     * It sends a polling byte frame with modbus function code 03, <code>ComLine</code> id, <code>Heliostat</code> id, and CRC to get a response from any RTU.
-     *
-     * @param comLineId   the <code>ComLine</code>> modbus id.
-     * @param heliostatId the <code>Heliostat</code> modbus id.
-     * @return
-     */
-    @RequestMapping(value = "/pollOne/{comLineId}/{heliostatId}", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Heliostat pollOne(@RequestParam int comLineId, @RequestParam int heliostatId) {
-        Heliostat heliostat = null;
-        heliostat = fieldController.pollOne(comLineId, heliostatId);
-        return heliostat;
+    @GetMapping(value = "/getCache", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ComLine getCache(@RequestParam int comLineId) {
+        return timerPollTasks.get(comLineId).getComlineCache();
     }
 
     /**
@@ -94,33 +82,31 @@ public class RestController {
      * @param command     the ASCII value of the command.
      * @return
      */
-    @RequestMapping(value = "/command", method = {RequestMethod.GET})
-    public boolean command(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam String command) {
+    @GetMapping(value = "/command")
+    @ResponseBody
+    public void command(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam String command) {
         try {
-            return fieldController.command(comLineId, heliostatId, command);
+            pauseTimers();
+            fieldController.command(comLineId, heliostatId, command);
         } catch (InterruptedException e) {
             e.printStackTrace();
-            return false;
         }
     }
 
+    public void pauseTimers() {
+        for (Timer timer : timers.values()) {
+            timer.cancel();
+        }
+    }
 
     //        /**
-    //         * @return All <code>ComLine</code> objects and all its <code>Heliostat</code> objects values
+    //         * @return All the <code>ComLine</code> objects from the xml file.
     //         */
-    //        @RequestMapping(value = "/pollField", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
-    //        public List<ComLine> pollField() {
-    //            List<ComLine> comLines = new ArrayList<>();
-    //            try {
-    //                for (ComLine comLine : fieldController.getComLines().values()) {
-    //                    for (Heliostat heliostat : comLine.getHeliostats().values()) {
-    //                        Heliostat heliostat1 = fieldController.poll(comLine.getId(), heliostat.getId());
-    //                        comLine.getHeliostats().put(heliostat1.getId(), heliostat1);
-    //                    }
-    //                    comLines.add(comLine);
-    //                }
-    //            } catch (Exception e) {
-    //                e.printStackTrace();
+    //        @RequestMapping(value = "/getCache", method = {RequestMethod.GET}, produces = MediaType.APPLICATION_JSON_VALUE)
+    //        public Map<Integer, ComLine> getCache() {
+    //            Map<Integer, ComLine> comLines = new HashMap<>();
+    //            for (TimerPollController timerPollController : timerPollControllers.values()) {
+    //                comLines.put(timerPollController.getComlineCache().getId(), timerPollController.getComlineCache());
     //            }
     //            return comLines;
     //        }

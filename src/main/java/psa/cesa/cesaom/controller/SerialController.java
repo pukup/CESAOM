@@ -43,7 +43,8 @@ public class SerialController {
         if (port.openPort()) {
             return true;
         } else {
-            throw new RuntimeException("Couldn't open port " + port.toString());
+            //            throw new RuntimeException("Couldn't open port " + port.toString());
+            return false;
         }
     }
 
@@ -72,7 +73,8 @@ public class SerialController {
         if (port.closePort()) {
             return true;
         } else {
-            throw new RuntimeException("Couldn't close port " + port.toString());
+            //            throw new RuntimeException("Couldn't close port " + port.toString());
+            return false;
         }
     }
 
@@ -105,6 +107,6 @@ public class SerialController {
         port.setNumDataBits(8);
         port.setParity(SerialPort.NO_PARITY);
         port.setNumStopBits(2);
-        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 100, 100);
+        port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 500, 500);
     }
 }
