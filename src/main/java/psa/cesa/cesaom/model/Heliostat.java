@@ -27,6 +27,7 @@ public class Heliostat {
 
     public Heliostat(int id) {
         this.id = id;
+        event = 16;
     }
 
     public int getId() {

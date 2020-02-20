@@ -30,11 +30,11 @@ public class TimerPollTask extends TimerTask {
     }
 
     /**
-     *
+     * It calls <method>pollComLine</method>.
      */
     @Override
     public void run() {
-        pollComLine();
+        pollComLine();          //DELAYED ITERATIONS??
     }
 
     /**

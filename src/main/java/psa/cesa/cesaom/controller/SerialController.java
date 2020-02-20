@@ -39,12 +39,10 @@ public class SerialController {
     /**
      * It tries to open the OS serial port.
      */
-    public boolean open() {
+    public void open() {
         if (port.openPort()) {
-            return true;
         } else {
-            //            throw new RuntimeException("Couldn't open port " + port.toString());
-            return false;
+            throw new RuntimeException("Couldn't open port " + port.toString());
         }
     }
 
@@ -69,12 +67,10 @@ public class SerialController {
     /**
      * @return if the port has been closed truly.
      */
-    public boolean close() {
+    public void close() {
         if (port.closePort()) {
-            return true;
         } else {
-            //            throw new RuntimeException("Couldn't close port " + port.toString());
-            return false;
+            throw new RuntimeException("Couldn't close port " + port.toString());
         }
     }
 

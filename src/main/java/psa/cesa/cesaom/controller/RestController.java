@@ -59,9 +59,9 @@ public class RestController {
      */
     private void setTimerPollControllers() {
         for (ComLine comLine : fieldController.getComLines().values()) {
-            timers.put(comLine.getId(), new Timer(String.valueOf(comLine.getId())));
+            timers.put(comLine.getId(), new Timer(String.valueOf("Timer: " + comLine.getId())));
             timerPollTasks.put(comLine.getId(), new TimerPollTask(comLine.getId(), fieldController));
-            timers.get(comLine.getId()).schedule(timerPollTasks.get(comLine.getId()), new Date(), 20000);
+            timers.get(comLine.getId()).scheduleAtFixedRate(timerPollTasks.get(comLine.getId()), 0, 20000);
         }
     }
 
