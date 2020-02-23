@@ -23,13 +23,17 @@ class FieldControllerTest {
     Map<Integer, ComLine> comLines = new HashMap<>();
 
     @InjectMocks
-    FieldController fieldController;
+    FieldController[] fieldControllers;
 
     @BeforeEach
     public void setup() {
         try {
             comLines = XmlLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("test.xml"));
-            fieldController = new FieldController(comLines);
+            int i = 0;
+            for (ComLine comLine : comLines.values()) {
+                fieldControllers[i] = new FieldController(comLine);
+                i++;
+            }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -41,17 +45,13 @@ class FieldControllerTest {
 
     @Test
     public void pollOne() {
-        fieldController.pollOne(1, 1);
-        Assertions.assertEquals(fieldController.getComLines().get(1).getHeliostats().get(1), new Heliostat(1));
+        fieldControllers[0].pollOne(1);
+        Assertions.assertEquals(fieldControllers[1].getComLine().getHeliostats().get(1), new Heliostat(1));
     }
 
     @Test
     public void sendCommandTest() {
-        try {
-            fieldController.command(1, 1, "a");
-            Assertions.assertEquals(fieldController.getComLines().get(1).getHeliostats().get(1), new Heliostat(1));
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        fieldControllers[0].command(1, "a");
+        Assertions.assertEquals(fieldControllers[1].getComLine().getHeliostats().get(1), new Heliostat(1));
     }
 }

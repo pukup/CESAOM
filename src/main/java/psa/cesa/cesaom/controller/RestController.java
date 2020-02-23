@@ -10,7 +10,6 @@ import psa.cesa.cesaom.model.XmlLinesReader;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -26,7 +25,7 @@ public class RestController {
      * @param timerPollControllers contains one <code>TimerTask</code> for every <code>ComLine</code>.
      * @param timers contains one <code>Timer</code> for every <code>ComLine</code>.
      */
-    private FieldController fieldController;
+    private Map<Integer, FieldController> fieldControllers;
     private Map<Integer, TimerPollTask> timerPollTasks;
     private Map<Integer, Timer> timers;
 
@@ -41,7 +40,7 @@ public class RestController {
      */
     public RestController() {
         try {
-            fieldController = new FieldController(XmlLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("fieldComLines.xml")));
+            fieldControllers = new HashMap<>();
             timers = new HashMap<>();
             timerPollTasks = new HashMap<>();
             setTimerPollControllers();
@@ -57,11 +56,12 @@ public class RestController {
     /**
      * It fills the Maps with its respective objects and schedule the <code>TimerPollControllers</code>.
      */
-    private void setTimerPollControllers() {
-        for (ComLine comLine : fieldController.getComLines().values()) {
+    private void setTimerPollControllers() throws IOException, SAXException, ParserConfigurationException {
+        Map<Integer, ComLine> comLineMap = XmlLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("fieldComLines.xml"));
+        for (ComLine comLine : comLineMap.values()) {
+            timerPollTasks.put(comLine.getId(), new TimerPollTask(comLine));
             timers.put(comLine.getId(), new Timer(String.valueOf("Timer: " + comLine.getId())));
-            timerPollTasks.put(comLine.getId(), new TimerPollTask(comLine.getId(), fieldController));
-            timers.get(comLine.getId()).scheduleAtFixedRate(timerPollTasks.get(comLine.getId()), 0, 20000);
+            timers.get(comLine.getId()).scheduleAtFixedRate(timerPollTasks.get(comLine.getId()), 0, 50000);
         }
     }
 
@@ -84,19 +84,20 @@ public class RestController {
      */
     @GetMapping(value = "/command")
     @ResponseBody
-    public void command(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam String command) {
-        try {
-            pauseTimers();
-            fieldController.command(comLineId, heliostatId, command);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public String command(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam String command) {
+        pauseTimers();
+        String s = fieldControllers.get(comLineId).command(heliostatId, command);
+        restartTimers();
+        return s;
     }
 
     public void pauseTimers() {
         for (Timer timer : timers.values()) {
             timer.cancel();
         }
+    }
+
+    private void restartTimers() {
     }
 
     //        /**

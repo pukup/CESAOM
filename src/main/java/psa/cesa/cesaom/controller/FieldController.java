@@ -5,7 +5,6 @@ import psa.cesa.cesaom.model.ComLine;
 import psa.cesa.cesaom.model.Heliostat;
 
 import java.nio.ByteBuffer;
-import java.util.Map;
 
 /**
  * It polls and commands <code>Heliostat</code> objects within a <code>ComLine<code/>.
@@ -16,44 +15,57 @@ public class FieldController {
      * Address and CRC bytes must be added by <method>pollOne</method> which calls <method>setPollerFrame</method>.
      * @param HOUR_AARRAY Contents the bytes to send a poll request on any heliostat.
      * Address and CRC bytes must be added by <method>getHour</method> which calls <method>setHourFrame</method>.
-     * @param comLines contents a map filled with all the <code>ComLine</code> objects of the xml file.
+     * @param comLine Contents a <object>ComLine</object> from the xml file.
+     * @param serialController contains the methods to control the jSerialComm API.
      */
     private static final byte[] POLL_ARRAY = {0x03, 0x00, 0x10, 0x00, 0x08};
     private static final byte[] HOUR_ARRAY = {0x03, 0x03, (byte) 0xEB, 0x00, 0x02};
-    private Map<Integer, ComLine> comLines;
+    private ComLine comLine;
+    private SerialController serialController;
 
-    public FieldController(Map<Integer, ComLine> comLines) {
-        this.comLines = comLines;
+    public FieldController(ComLine comLine) {
+        this.comLine = comLine;
+        openSerialController();
     }
 
-    public Map<Integer, ComLine> getComLines() {
-        return comLines;
+    /**
+     * Gets the <code>ComLine</code> portDir and opens it.
+     */
+    private void openSerialController() {
+        try {
+            serialController = new SerialController(comLine.getPortDir());
+            serialController.open();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ComLine getComLine() {
+        return comLine;
     }
 
     /**
      * It targets a <code>ComLine</code> and an <code>Heliostat</code> to send and receive the poll bytes from it.
      *
-     * @param comLineId   represents the number or position of the comLine.
      * @param heliostatId represents the modbus slave address.
      */
-    public void pollOne(int comLineId, int heliostatId) {
+    public void pollOne(int heliostatId) {
         try {
-            ComLine comLine = comLines.get(comLineId);
+            if (!serialController.getPort().isOpen())
+                serialController.open();
             Heliostat heliostat = comLine.getHeliostats().get(heliostatId);
-            SerialController serialController = new SerialController(comLine.getPortDir());
-            serialController.open();
             serialController.send(setPollerFrame(heliostatId));
             Thread.sleep(250);
-            checkPollResponse(serialController, heliostat);
+            checkPollResponse(heliostat);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            serialController.close();
         } catch (InterruptedException e) {
+            serialController.close();
             e.printStackTrace();
         }
     }
 
     /**
-     * Adds the <code>Heliostat</code> address, the poller bytes nad CRC into an array.
+     * Adds the <object>Heliostat</object> address, the poller bytes and CRC into an array.
      *
      * @param heliostatId represents the number or position of the comLine.
      * @return The poller frame for an specific <code>Heliostat</code>.
@@ -70,10 +82,9 @@ public class FieldController {
     /**
      * Checks if there are any received bytes from the <code>SerialController</code> port and uses <method>setHelioState</method> to update the <code>Heliostat</code> attributes.
      *
-     * @param serialController contains the methods to control the jSerialComm API.
-     * @param heliostat        represents the RTU itself.
+     * @param heliostat represents the RTU itself.
      */
-    private synchronized void checkPollResponse(SerialController serialController, Heliostat heliostat) {
+    private synchronized void checkPollResponse(Heliostat heliostat) {
         if (serialController.getPort().bytesAvailable() < 1) {
             heliostat.setEvent(0x10);
             System.out.println("No response");
@@ -101,20 +112,22 @@ public class FieldController {
     /**
      * It targets a <code>ComLine</code> and an <code>Heliostat</code> to send commands.
      *
-     * @param comLineId
      * @param heliostatId
      * @param command
      */
-    public void command(int comLineId, int heliostatId, String command) throws InterruptedException {
-        ComLine comLine = comLines.get(comLineId);
-        Heliostat heliostat = comLine.getHeliostats().get(heliostatId);
-        SerialController serialController = new SerialController(comLine.getPortDir());
-        serialController.open();
-        serialController.send(setCommandFrame(heliostatId, command));
-        Thread.sleep(100);
-        checkCommandResponse(serialController, heliostat);
-        comLine.getHeliostats().put(heliostatId, heliostat);
-        serialController.close();
+    public String command(int heliostatId, String command) {
+        try {
+            if (!serialController.getPort().isOpen())
+                serialController.open();
+            Heliostat heliostat = comLine.getHeliostats().get(heliostatId);
+            serialController.send(setCommandFrame(heliostatId, command));
+            Thread.sleep(250);
+            comLine.getHeliostats().put(heliostatId, heliostat);
+            return checkCommandResponse(heliostat);
+        } catch (InterruptedException e) {
+            serialController.close();
+            return e.toString();
+        }
     }
 
     /**
@@ -131,15 +144,18 @@ public class FieldController {
     }
 
     /**
+     * @param heliostat
      * @return
      */
-    private void checkCommandResponse(SerialController serialController, Heliostat heliostat) {
+    private String checkCommandResponse(Heliostat heliostat) {
         if (serialController.getPort().bytesAvailable() < 1) {
             heliostat.setEvent(0x10);
             System.out.println("No response");
+            return "No response.";
         } else {
             ByteBuffer byteBuffer = ByteBuffer.wrap(serialController.receive());
             System.out.println(bufferToString(byteBuffer));
+            return bufferToString(byteBuffer);
         }
     }
 

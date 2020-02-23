@@ -2,11 +2,9 @@ package psa.cesa.cesaom.controller;
 
 import com.fazecast.jSerialComm.SerialPort;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
@@ -20,10 +18,10 @@ public class SerialControllerTest {
     @InjectMocks
     SerialController serialController = new SerialController("test");
 
-//    @BeforeEach
-//    public void setup() {
-//        Mockito.when(serialController.open()).thenReturn(true);
-//    }
+    //    @BeforeEach
+    //    public void setup() {
+    //        Mockito.when(serialController.open()).thenReturn(true);
+    //    }
 
     @Test
     public void constructorTest() {
@@ -31,10 +29,10 @@ public class SerialControllerTest {
         Assertions.assertEquals(this.port, port);
     }
 
-//    @Test
-//    public void testOpen() {
-//        Assertions.assertTrue(serialController.open());
-//    }
+    //    @Test
+    //    public void testOpen() {
+    //        Assertions.assertTrue(serialController.open());
+    //    }
 
     @Test
     public void testGetPorts() {

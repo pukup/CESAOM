@@ -2,24 +2,37 @@ package psa.cesa.cesaom.model;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.xml.sax.SAXException;
 import psa.cesa.cesaom.controller.FieldController;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 class HeliostatTest {
 
-    FieldController fieldController;
+    @Mock
+    Map<Integer, ComLine> comLines = new HashMap<>();
+
+    @InjectMocks
+    FieldController[] fieldControllers;
 
     @BeforeEach
     public void setup() {
         try {
-            fieldController = new FieldController(XmlLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("test.xml")));
+            comLines = XmlLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("test.xml"));
+            int i = 0;
+            for (ComLine comLine : comLines.values()) {
+                fieldControllers[i] = new FieldController(comLine);
+                i++;
+            }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -32,8 +45,8 @@ class HeliostatTest {
     @Test
     public void ToString() {
         try {
-            fieldController.pollOne(1, 1);
-            Heliostat heliostat = fieldController.getComLines().get(1).getHeliostats().get(1);
+            fieldControllers[0].pollOne(1);
+            Heliostat heliostat = fieldControllers[0].getComLine().getHeliostats().get(1);
             assertEquals(1, heliostat.getId());
             //            assertEquals("Abatimiento normal", heliostat.state0ToString());
             //            System.out.println(heliostat.state1ToString());
