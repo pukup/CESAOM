@@ -32,14 +32,19 @@ public class FieldController {
      * Gets the <code>ComLine</code> portDir and opens it.
      */
     private void openSerialController() {
-        try {
-            serialController = new SerialController(comLine.getPortDir());
-            serialController.open();
-        } catch (Exception e) {
-            e.printStackTrace();
+        serialController = new SerialController(comLine.getPortDir());
+        if (serialController.open()) {
+        } else {
+            throw new RuntimeException("Couldn't open " + comLine.getPortDir());
         }
+
     }
 
+    /**
+     * Getter for the <class>ComLine</class>
+     *
+     * @return
+     */
     public ComLine getComLine() {
         return comLine;
     }
@@ -47,19 +52,22 @@ public class FieldController {
     /**
      * It targets a <code>ComLine</code> and an <code>Heliostat</code> to send and receive the poll bytes from it.
      *
-     * @param heliostatId represents the modbus slave address.
+     * @param heliostatId represents a modbus slave address.
      */
     public void pollOne(int heliostatId) {
         try {
-            if (!serialController.getPort().isOpen())
-                serialController.open();
+            if (!serialController.isOpen())
+                openSerialController();
             Heliostat heliostat = comLine.getHeliostats().get(heliostatId);
             serialController.send(setPollerFrame(heliostatId));
             Thread.sleep(250);
             checkPollResponse(heliostat);
             comLine.getHeliostats().put(heliostatId, heliostat);
+
         } catch (InterruptedException e) {
             serialController.close();
+            e.printStackTrace();
+        } catch (RuntimeException e) {
             e.printStackTrace();
         }
     }
@@ -75,19 +83,22 @@ public class FieldController {
         byteBuffer.put((byte) heliostatId);
         byteBuffer.put(POLL_ARRAY);
         byteBuffer.put(CRC.calculate(byteBuffer.array(), 6));
-        System.out.println(bufferToString(byteBuffer));
+        System.out.println("send: " + bufferToString(byteBuffer));
         return byteBuffer.array();
     }
 
     /**
-     * Checks if there are any received bytes from the <code>SerialController</code> port and uses <method>setHelioState</method> to update the <code>Heliostat</code> attributes.
+     * Checks received bytes from the <code>SerialController</code> port.
+     * <p>
+     * If there are any bytes, it uses <method>setHelioState</method> to update the <code>Heliostat</code> attributes.
+     * <p>
+     * If there aren't any bytes, updates the <code>Heliostat</code> event to com failure.
      *
      * @param heliostat represents the RTU itself.
      */
     private synchronized void checkPollResponse(Heliostat heliostat) {
         if (serialController.getPort().bytesAvailable() < 1) {
             heliostat.setEvent(0x10);
-            System.out.println("No response");
         } else {
             ByteBuffer byteBuffer = ByteBuffer.wrap(serialController.receive());
             heliostat.setAttributes(byteBuffer);
@@ -117,8 +128,8 @@ public class FieldController {
      */
     public String command(int heliostatId, String command) {
         try {
-            if (!serialController.getPort().isOpen())
-                serialController.open();
+            if (!serialController.isOpen())
+                openSerialController();
             Heliostat heliostat = comLine.getHeliostats().get(heliostatId);
             serialController.send(setCommandFrame(heliostatId, command));
             Thread.sleep(250);
@@ -126,6 +137,8 @@ public class FieldController {
             return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             serialController.close();
+            return e.toString();
+        } catch (RuntimeException e) {
             return e.toString();
         }
     }
@@ -140,10 +153,13 @@ public class FieldController {
         byteBuffer.put((byte) heliostatId);
         byteBuffer.put(selectCommand(command));
         byteBuffer.put(CRC.calculate(byteBuffer.array(), 9));
+        System.out.println(bufferToString(byteBuffer));
         return byteBuffer.array();
     }
 
     /**
+     * Checks if there are any received bytes from the <code>SerialController</code> port and if not updates the <code>Heliostat</code> event to com failure.
+     *
      * @param heliostat
      * @return
      */

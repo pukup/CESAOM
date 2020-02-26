@@ -13,14 +13,12 @@ public class SerialController {
      * @param port Allocates a <code>SerialPort</code> object corresponding to the cpu direction.
      */
     private SerialPort port;
-    private String portDir;
 
     /**
      * @param portDir serial port computer address.
      */
     public SerialController(String portDir) {
         this.port = SerialPort.getCommPort(portDir);
-        this.portDir = portDir;
         assignDefaultValues();
     }
 
@@ -40,10 +38,21 @@ public class SerialController {
 
     /**
      * It tries to open the OS serial port.
+     *
+     * @return if has been opened truly.
+     * @throws RuntimeException
      */
-    public void open() throws RuntimeException {
-        if (!port.openPort())
-            throw new RuntimeException("Couldn't open serial port " + portDir);
+    public boolean open() throws RuntimeException {
+        return port.openPort();
+    }
+
+    /**
+     * Checks if the port is open.
+     *
+     * @return is truly open.
+     */
+    public boolean isOpen() {
+        return port.isOpen();
     }
 
     /**
@@ -65,14 +74,17 @@ public class SerialController {
     }
 
     /**
+     * Tries to open the OS serial port.
+     *
      * @return if the port has been closed truly.
      */
-    public void close() throws RuntimeException {
-        if (!port.closePort())
-            throw new RuntimeException("Couldn't close port " + portDir);
+    public boolean close() throws RuntimeException {
+        return port.closePort();
     }
 
     /**
+     * Returns the selected computer serial port.
+     *
      * @return the API serial port.
      */
     public SerialPort getPort() {
@@ -80,7 +92,7 @@ public class SerialController {
     }
 
     /**
-     * Returns the computer serial ports.
+     * Returns all the computer serial ports.
      *
      * @return the ports from OS.
      */

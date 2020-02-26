@@ -16,9 +16,9 @@ public class TimerPollTask extends TimerTask {
     private ComLine comLine;
     private ComLine cache;
 
-    public TimerPollTask(ComLine comLine) {
-        fieldController = new FieldController(comLine);
-        this.comLine = comLine;
+    public TimerPollTask(FieldController fieldController) {
+        this.fieldController = fieldController;
+        this.comLine = fieldController.getComLine();
         this.cache = comLine;
     }
 
@@ -34,7 +34,7 @@ public class TimerPollTask extends TimerTask {
      */
     @Override
     public void run() {
-        pollComLine();          //DELAYED ITERATIONS??
+        pollComLine();
     }
 
     /**
