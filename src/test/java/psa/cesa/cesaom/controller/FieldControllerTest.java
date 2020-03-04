@@ -45,7 +45,7 @@ class FieldControllerTest {
 
     @Test
     public void pollOne() {
-        fieldControllers[0].pollOne(1);
+        fieldControllers[0].poll(1);
         Assertions.assertEquals(fieldControllers[1].getComLine().getHeliostats().get(1), new Heliostat(1));
     }
 

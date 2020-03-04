@@ -44,7 +44,7 @@ public class TimerPollTask extends TimerTask {
      */
     public void pollComLine() {
         for (Heliostat heliostat : comLine.getHeliostats().values()) {
-            fieldController.pollOne(heliostat.getId());
+            fieldController.poll(heliostat.getId());
         }
         cache = comLine;
     }

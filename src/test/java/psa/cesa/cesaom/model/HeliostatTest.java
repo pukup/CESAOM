@@ -45,7 +45,7 @@ class HeliostatTest {
     @Test
     public void ToString() {
         try {
-            fieldControllers[0].pollOne(1);
+            fieldControllers[0].poll(1);
             Heliostat heliostat = fieldControllers[0].getComLine().getHeliostats().get(1);
             assertEquals(1, heliostat.getId());
             //            assertEquals("Abatimiento normal", heliostat.state0ToString());
