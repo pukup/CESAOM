@@ -144,23 +144,23 @@
     <!--        <heliostat id="32"/>-->
     <!--        <heliostat id="33"/>-->
     <!--    </comLine>-->
-    <!--    <comLine id="9" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="1"/>-->
-    <!--        <heliostat id="2"/>-->
-    <!--        <heliostat id="3"/>-->
-    <!--        <heliostat id="4"/>-->
-    <!--        <heliostat id="5"/>-->
-    <!--        <heliostat id="6"/>-->
-    <!--        <heliostat id="7"/>-->
-    <!--        <heliostat id="8"/>-->
-    <!--        <heliostat id="9"/>-->
-    <!--        <heliostat id="10"/>-->
-    <!--        <heliostat id="11"/>-->
-    <!--        <heliostat id="12"/>-->
-    <!--        <heliostat id="13"/>-->
-    <!--        <heliostat id="14"/>-->
-    <!--        <heliostat id="15"/>-->
-    <!--    </comLine>-->
+    <!--        <comLine id="9" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
+    <!--            <heliostat id="1"/>-->
+    <!--            <heliostat id="2"/>-->
+    <!--            <heliostat id="3"/>-->
+    <!--            <heliostat id="4"/>-->
+    <!--            <heliostat id="5"/>-->
+    <!--            <heliostat id="6"/>-->
+    <!--            <heliostat id="7"/>-->
+    <!--            <heliostat id="8"/>-->
+    <!--            <heliostat id="9"/>-->
+    <!--            <heliostat id="10"/>-->
+    <!--            <heliostat id="11"/>-->
+    <!--            <heliostat id="12"/>-->
+    <!--            <heliostat id="13"/>-->
+    <!--            <heliostat id="14"/>-->
+    <!--            <heliostat id="15"/>-->
+    <!--        </comLine>-->
     <!--    <comLine id="8" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
     <!--        <heliostat id="135"/>-->
     <!--        <heliostat id="136"/>-->
@@ -316,20 +316,20 @@
     <comLine id="1" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">
         <heliostat id="1"/>
         <heliostat id="2"/>
-        <!--        <heliostat id="3"/>-->
-        <!--        <heliostat id="4"/>-->
-        <!--        <heliostat id="5"/>-->
-        <!--        <heliostat id="6"/>-->
-        <!--        <heliostat id="7"/>-->
-        <!--        <heliostat id="8"/>-->
-        <!--        <heliostat id="9"/>-->
-        <!--        <heliostat id="10"/>-->
-        <!--        <heliostat id="11"/>-->
-        <!--        <heliostat id="12"/>-->
-        <!--        <heliostat id="13"/>-->
-        <!--        <heliostat id="14"/>-->
-        <!--        <heliostat id="15"/>-->
-        <!--        <heliostat id="16"/>-->
-        <!--        <heliostat id="17"/>-->
+        <heliostat id="3"/>
+        <heliostat id="4"/>
+        <heliostat id="5"/>
+        <heliostat id="6"/>
+        <heliostat id="7"/>
+        <heliostat id="8"/>
+        <heliostat id="9"/>
+        <heliostat id="10"/>
+        <heliostat id="11"/>
+        <heliostat id="12"/>
+        <heliostat id="13"/>
+        <heliostat id="14"/>
+        <heliostat id="15"/>
+        <heliostat id="16"/>
+        <heliostat id="17"/>
     </comLine>
 </root>

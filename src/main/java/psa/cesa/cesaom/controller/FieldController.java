@@ -38,11 +38,7 @@ public class FieldController {
      */
     private void openSerialController() {
         serialController = new SerialController(comLine.getPortDir());
-        if (serialController.open()) {
-        } else {
-            //            throw new RuntimeException("Couldn't open " + comLine.getPortDir()); //que carajo hago
-        }
-
+        serialController.open();
     }
 
     /**
@@ -78,7 +74,7 @@ public class FieldController {
         byteBuffer.put((byte) heliostatId);
         byteBuffer.put(POLL_ARRAY);
         byteBuffer.put(CRC.calculate(byteBuffer.array(), 6));
-        System.out.println("poller: " + bufferToString(byteBuffer));
+//        System.out.println(bufferToString(byteBuffer));
         return byteBuffer.array();
     }
 
@@ -93,12 +89,12 @@ public class FieldController {
      */
     private synchronized void checkPollResponse(Heliostat heliostat) {
         if (serialController.getPort().bytesAvailable() < 1) {
+//            System.out.println("no poll response");
             heliostat.setEvent(0x10);
-            System.out.println("poller response");
         } else {
             ByteBuffer byteBuffer = ByteBuffer.wrap(serialController.receive());
+//            System.out.println(bufferToString(byteBuffer));
             heliostat.setAttributes(byteBuffer);
-            System.out.println("poller response" + bufferToString(byteBuffer));
         }
     }
 
@@ -131,7 +127,7 @@ public class FieldController {
             serialController.send(setCommandFrame(heliostatId, command));
             Thread.sleep(250);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             serialController.close();
             return e.toString();
@@ -162,14 +158,14 @@ public class FieldController {
      * @param heliostat
      * @return if the RTU has sent any bytes back.
      */
-    private String checkResponse(Heliostat heliostat) {
+    private String checkCommandResponse(Heliostat heliostat) {
         if (serialController.getPort().bytesAvailable() < 1) {
             heliostat.setEvent(0x10);
-            System.out.println("command response");
+            System.out.println("no response");
             return "No responde";
         } else {
             ByteBuffer byteBuffer = ByteBuffer.wrap(serialController.receive());
-            System.out.println("respuesta" + bufferToString(byteBuffer));
+            System.out.println(bufferToString(byteBuffer));
             return bufferToString(byteBuffer);
         }
     }
@@ -241,7 +237,7 @@ public class FieldController {
             serialController.send(setFocusFrame(heliostatId, focus));
             Thread.sleep(250);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             serialController.close();
             return e.toString();
@@ -284,7 +280,7 @@ public class FieldController {
             serialController.send(setNewFocusFrame(heliostatId, focus, x, y, z));
             Thread.sleep(250);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             serialController.close();
             return e.toString();
@@ -327,7 +323,7 @@ public class FieldController {
             serialController.send(setAzElFrame(heliostatId, azimuth));
             Thread.sleep(250);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             serialController.close();
             return e.toString();
@@ -367,7 +363,7 @@ public class FieldController {
             serialController.send(setAzElFrame(heliostatId, elevation));
             Thread.sleep(250);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             serialController.close();
             return e.toString();
@@ -377,6 +373,12 @@ public class FieldController {
     }
 
 
+    /**
+     * It targets a <code>ComLine</code> and <code>Heliostat</code> to get offset values from it.
+     *
+     * @param heliostatId RTU slave address.
+     * @return if the RTU has sent back any bytes frame as received bytes confirmation.
+     */
     public String getOffsetAz(int heliostatId) {
         try {
             if (!serialController.isOpen())
@@ -385,7 +387,7 @@ public class FieldController {
             serialController.send(getOffsetAzElFrame(heliostatId));
             Thread.sleep(250);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             serialController.close();
             return e.toString();
@@ -394,12 +396,24 @@ public class FieldController {
         }
     }
 
+    /**
+     * Adds the <class>Heliostat</class> address, the memory address where offset is stored, and CRC into a buffer.
+     *
+     * @param heliostatId RTU slave address.
+     * @return modbus frame.
+     */
     private byte[] getOffsetAzElFrame(int heliostatId) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(25);
         byteBuffer.put((byte) heliostatId);
         return byteBuffer.array();
     }
 
+    /**
+     * It targets a <code>ComLine</code> and <code>Heliostat</code> to get offset values from it.
+     *
+     * @param heliostatId RTU slave address.
+     * @return if the RTU has sent back any bytes frame as received bytes confirmation.
+     */
     public String getOffsetEl(int heliostatId) {
         try {
             if (!serialController.isOpen())
@@ -408,7 +422,7 @@ public class FieldController {
             serialController.send(getOffsetAzElFrame(heliostatId));
             Thread.sleep(250);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             serialController.close();
             return e.toString();
@@ -432,7 +446,7 @@ public class FieldController {
             serialController.send(setOffsetAzElFrame(heliostatId, offsetAz));
             Thread.sleep(250);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             serialController.close();
             return e.toString();
@@ -472,7 +486,7 @@ public class FieldController {
             serialController.send(setOffsetAzElFrame(heliostatId, offsetEl));
             Thread.sleep(250);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             serialController.close();
             return e.toString();
@@ -481,6 +495,13 @@ public class FieldController {
         }
     }
 
+
+    /**
+     * It targets a <class>Heliostat</class> and an <class>Heliostat</class> to ask 3 bytes from the 218 address which stores hour.
+     *
+     * @param heliostatId the RTU slave address.
+     * @return if the RTU has sent back any hour bytes frame.
+     */
     public String getDate(int heliostatId) {
         try {
             if (!serialController.isOpen())
@@ -489,14 +510,32 @@ public class FieldController {
             serialController.send(setHourGetterFrame(heliostatId));
             Thread.sleep(250);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return returnDate(heliostat);
         } catch (InterruptedException e) {
             return e.getMessage();
         }
     }
 
     /**
-     * It targets a <class>Heliostat</class> and an <class>Heliostat</class> to ask 3 bytes from the 218 address which keeps hour.
+     * Checks if there are any received bytes from the <code>SerialController</code> port and if not updates the <code>Heliostat</code> event to com failure.
+     *
+     * @param heliostat
+     * @return if the RTU has sent any bytes back.
+     */
+    private String returnDate(Heliostat heliostat) {
+        if (serialController.getPort().bytesAvailable() < 1) {
+            heliostat.setEvent(0x10);
+            System.out.println("command response");
+            return "No responde";
+        } else {
+            ByteBuffer byteBuffer = ByteBuffer.wrap(serialController.receive());
+            System.out.println("respuesta" + bufferToString(byteBuffer));
+            return bufferToString(byteBuffer);
+        }
+    }
+
+    /**
+     * It targets a <class>Heliostat</class> and an <class>Heliostat</class> to ask 3 bytes from the 218 address which stores hour.
      *
      * @param heliostatId the RTU slave address.
      * @return if the RTU has sent back any hour bytes frame.
@@ -508,8 +547,7 @@ public class FieldController {
             Heliostat heliostat = comLine.getHeliostats().get(heliostatId);
             serialController.send(setHourGetterFrame(heliostatId));
             Thread.sleep(250);
-            comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             return e.getMessage();
         }
@@ -535,9 +573,9 @@ public class FieldController {
                 openSerialController();
             Heliostat heliostat = comLine.getHeliostats().get(heliostatId);
             //            serialController.send(setHourGetterFrame(heliostatId));
-            Thread.sleep(250);
+            Thread.sleep(500);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             return e.getMessage();
         }
@@ -549,44 +587,11 @@ public class FieldController {
                 openSerialController();
             Heliostat heliostat = comLine.getHeliostats().get(heliostatId);
             //            serialController.send(setHourGetterFrame(heliostatId));
-            Thread.sleep(250);
+            Thread.sleep(500);
             comLine.getHeliostats().put(heliostatId, heliostat);
-            return checkResponse(heliostat);
+            return checkCommandResponse(heliostat);
         } catch (InterruptedException e) {
             return e.getMessage();
         }
     }
-
-    //    /**
-    //     * It targets a <class>Heliostat</class> and an <class>Heliostat</class> to
-    //     *
-    //     * @param heliostatId the RTU slave address.
-    //     * @return if the RTU has sent back any confirmation as received bytes frame.
-    //     */
-    //    public String setHour(int heliostatId) {
-    //        try {
-    //            if (!serialController.isOpen())
-    //                openSerialController();
-    //            Heliostat heliostat = comLine.getHeliostats().get(heliostatId);
-    //            serialController.send(setHourSetterFrame(heliostatId));
-    //            Thread.sleep(250);
-    //            comLine.getHeliostats().put(heliostatId, heliostat);
-    //            return checkResponse(heliostat);
-    //        } catch (InterruptedException e) {
-    //            return e.getMessage();
-    //        }
-    //    }
-    //
-    //    private byte[] setHourSetterFrame(int heliostatId) {
-    //        ByteBuffer byteBuffer = ByteBuffer.allocate(8);
-    //        byteBuffer.put((byte) heliostatId);
-    //        byteBuffer.put(buildHourFrame());
-    //        byteBuffer.put(CRC.calculate(byteBuffer.array(), 6));
-    //        return byteBuffer.array();
-    //    }
-    //
-    //    private byte buildHourFrame() {
-    //        new Date().getTime();
-    //    }
-
 }

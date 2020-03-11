@@ -37,6 +37,15 @@ public class SerialController {
     }
 
     /**
+     * Returns all the computer serial ports.
+     *
+     * @return the ports from OS.
+     */
+    public static SerialPort[] getPorts() {
+        return SerialPort.getCommPorts();
+    }
+
+    /**
      * It tries to open the OS serial port.
      *
      * @return if has been opened truly.
@@ -89,15 +98,6 @@ public class SerialController {
      */
     public SerialPort getPort() {
         return this.port;
-    }
-
-    /**
-     * Returns all the computer serial ports.
-     *
-     * @return the ports from OS.
-     */
-    public static SerialPort[] getPorts() {
-        return SerialPort.getCommPorts();
     }
 
     /**

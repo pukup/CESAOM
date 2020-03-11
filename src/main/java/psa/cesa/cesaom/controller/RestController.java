@@ -48,7 +48,6 @@ public class RestController {
             fieldControllers = new HashMap<>();
             timers = new HashMap<>();
             timerPollTasks = new HashMap<>();
-            setFieldControllers();
             startTimers();
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
@@ -60,33 +59,15 @@ public class RestController {
     }
 
     /**
-     * It fills the <code>fieldsControllers</code> with its respective objects.
-     */
-    private void setFieldControllers() {
-        for (ComLine comLine : comLineMap.values()) {
-            System.out.println(System.getProperties());
-            fieldControllers.put(comLine.getId(), new FieldController(comLine));
-        }
-    }
-
-    /**
      * It fills the <code>timerPollTasks</code> Map and <code>timers</code> with new objects and schedule the <class>TimerPollTask</class>.
      */
     private void startTimers() {
         for (ComLine comLine : comLineMap.values()) {
+            fieldControllers.put(comLine.getId(), new FieldController(comLine));
             timerPollTasks.put(comLine.getId(), new TimerPollTask(fieldControllers.get(comLine.getId())));
             timers.put(comLine.getId(), new Timer("Timer: " + comLine.getId()));
             timers.get(comLine.getId()).schedule(timerPollTasks.get(comLine.getId()), 0, 5000);
         }
-    }
-
-    /**
-     * It fills the <code>timerPollTasks</code> Map and <code>timers</code> with one new object and schedule the <class>TimerPollTask</class>.
-     */
-    private void startTimer(int comLineId) {
-        timerPollTasks.put(comLineId, new TimerPollTask(fieldControllers.get(comLineId)));
-        timers.put(comLineId, new Timer("Timer: " + comLineId));
-        timers.get(comLineId).schedule(timerPollTasks.get(comLineId), 0, 5000);
     }
 
     /**
@@ -109,30 +90,10 @@ public class RestController {
     @GetMapping(value = "/command", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String command(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam String command) {
-        cancelTimers();
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).command(heliostatId, command);
-        startTimers();
+        timerPollTasks.get(comLineId).pause(false);
         return s;
-    }
-
-    /**
-     * It stops every <class>Timer</class> within <code>timers</code>.
-     */
-    public void cancelTimers() {
-        for (Timer timer : timers.values()) {
-            timer.cancel();
-            timer.purge();
-        }
-    }
-
-    /**
-     * It stops a <class>Timer</class> within <code>timers</code>.
-     *
-     * @param comLineId
-     */
-    public void cancelTimer(int comLineId) {
-        timers.get(comLineId).cancel();
-        timers.get(comLineId).purge();
     }
 
     /**
@@ -146,9 +107,9 @@ public class RestController {
     @GetMapping(value = "/focus", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String focus(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int focus) {
-        cancelTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).focus(heliostatId, focus);
-        startTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(false);
         return s;
     }
 
@@ -166,9 +127,9 @@ public class RestController {
     @GetMapping(value = "/newFocus", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String newFocus(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int focus, @RequestParam int x, @RequestParam int y, @RequestParam int z) {
-        cancelTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).newFocus(heliostatId, focus, x, y, z);
-        startTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(false);
         return s;
     }
 
@@ -183,9 +144,9 @@ public class RestController {
     @GetMapping(value = "/setAzimuth", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String setAzimuth(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int azimuth) {
-        cancelTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).setAzimuth(heliostatId, azimuth);
-        startTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(false);
         return s;
     }
 
@@ -200,28 +161,41 @@ public class RestController {
     @GetMapping(value = "/setElevation", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String setElevation(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int elevation) {
-        cancelTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).setElevation(heliostatId, elevation);
-        startTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(false);
         return s;
     }
 
-
+    /**
+     * It sends a command bytes frame with modbus function code 16, <code>ComLine</code> id, <code>Heliostat</code> id, the memory address where offset is stored, and CRC.
+     *
+     * @param comLineId   the <class>ComLine</class> id.
+     * @param heliostatId the <class>Heliostat</class> modbus id.
+     * @return bytes frame as the RTU response.
+     */
     @GetMapping(value = "/getOffsetAz", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String getOffsetAz(@RequestParam int comLineId, @RequestParam int heliostatId) {
-        cancelTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).getOffsetAz(heliostatId);
-        startTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(false);
         return s;
     }
 
+    /**
+     * It sends a command bytes frame with modbus function code 16, <code>ComLine</code> id, <code>Heliostat</code> id, the memory address where offset is stored, and CRC.
+     *
+     * @param comLineId   the <class>ComLine</class> id.
+     * @param heliostatId the <class>Heliostat</class> modbus id.
+     * @return bytes frame as the RTU response.
+     */
     @GetMapping(value = "/getOffsetEl", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String getOffsetEl(@RequestParam int comLineId, @RequestParam int heliostatId) {
-        cancelTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).getOffsetEl(heliostatId);
-        startTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(false);
         return s;
     }
 
@@ -236,9 +210,9 @@ public class RestController {
     @GetMapping(value = "/setOffsetAz", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String setOffsetAz(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int offsetAz) {
-        cancelTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).setOffsetAz(heliostatId, offsetAz);
-        startTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(false);
         return s;
     }
 
@@ -253,47 +227,73 @@ public class RestController {
     @GetMapping(value = "/setOffsetEl", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String setOffsetEl(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int offsetEl) {
-        cancelTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).setOffsetEl(heliostatId, offsetEl);
-        startTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(false);
         return s;
     }
 
+    /**
+     * It sends a command bytes frame with modbus function code 16, <code>ComLine</code> id, <code>Heliostat</code> id, the memory address where date is stored, and CRC.
+     *
+     * @param comLineId   the <class>ComLine</class> id.
+     * @param heliostatId the <class>Heliostat</class> modbus id.
+     * @return bytes frame as the RTU response.
+     */
     @GetMapping(value = "/getDate", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String getDate(@RequestParam int comLineId, @RequestParam int heliostatId) {
-        cancelTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).getDate(heliostatId);
-        startTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(false);
         return s;
     }
 
+    /**
+     * It sends a command bytes frame with modbus function code 16, <code>ComLine</code> id, <code>Heliostat</code> id, the memory address where hour is stored, and CRC.
+     *
+     * @param comLineId   the <class>ComLine</class> id.
+     * @param heliostatId the <class>Heliostat</class> modbus id.
+     * @return bytes frame as the RTU response.
+     */
     @GetMapping(value = "/getHour", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String getHour(@RequestParam int comLineId, @RequestParam int heliostatId) {
-        cancelTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).getHour(heliostatId);
-        startTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(false);
         return s;
     }
 
+    /**
+     * It sends a command bytes frame with modbus function code 16, <code>ComLine</code> id, <code>Heliostat</code> id, the date values, its position in memory, and CRC.
+     *
+     * @param comLineId   the <class>ComLine</class> id.
+     * @param heliostatId the <class>Heliostat</class> modbus id.
+     * @return bytes frame as the RTU response.
+     */
     @GetMapping(value = "/setDate", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String setDate(@RequestParam int comLineId, @RequestParam int heliostatId) {
-        cancelTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).setDate(heliostatId);
-        startTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(false);
         return s;
     }
 
-    @GetMapping(value = "/getHour", produces = MediaType.TEXT_PLAIN_VALUE)
+    /**
+     * It sends a command bytes frame with modbus function code 16, <code>ComLine</code> id, <code>Heliostat</code> id, the hour values, its position in memory, and CRC.
+     *
+     * @param comLineId   the <class>ComLine</class> id.
+     * @param heliostatId the <class>Heliostat</class> modbus id.
+     * @return bytes frame as the RTU response.
+     */
+    @GetMapping(value = "/setHour", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String setHour(@RequestParam int comLineId, @RequestParam int heliostatId) {
-        cancelTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(true);
         String s = fieldControllers.get(comLineId).setHour(heliostatId);
-        startTimer(comLineId);
+        timerPollTasks.get(comLineId).pause(false);
         return s;
     }
-
-
 }

@@ -15,11 +15,12 @@ public class TimerPollTask extends TimerTask {
     private FieldController fieldController;
     private ComLine comLine;
     private ComLine cache;
+    private boolean pause;
 
     public TimerPollTask(FieldController fieldController) {
         this.fieldController = fieldController;
-        this.comLine = fieldController.getComLine();
-        this.cache = comLine;
+        comLine = fieldController.getComLine();
+        cache = comLine;
     }
 
     /**
@@ -27,6 +28,12 @@ public class TimerPollTask extends TimerTask {
      */
     public synchronized ComLine getComlineCache() {
         return cache;
+    }
+
+    public synchronized void pause(boolean pause) {
+        this.pause = pause;
+        if (!pause)
+            notifyAll();
     }
 
     /**
@@ -44,8 +51,15 @@ public class TimerPollTask extends TimerTask {
      */
     public void pollComLine() {
         for (Heliostat heliostat : comLine.getHeliostats().values()) {
+            while (pause) {
+                try {
+                    Thread.sleep(2000);//wait
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             fieldController.poll(heliostat.getId());
+            cache = comLine;
         }
-        cache = comLine;
     }
 }
