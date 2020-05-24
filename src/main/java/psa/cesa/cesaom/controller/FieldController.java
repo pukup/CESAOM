@@ -91,6 +91,7 @@ public class FieldController {
         if (serialController.getPort().bytesAvailable() < 1) {
 //            System.out.println("no poll response");
             heliostat.setEvent(0x10);
+            heliostat.setState(1);
         } else {
             ByteBuffer byteBuffer = ByteBuffer.wrap(serialController.receive());
 //            System.out.println(bufferToString(byteBuffer));

@@ -1,10 +1,7 @@
 package psa.cesa.cesaom.controller;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.xml.sax.SAXException;
 import psa.cesa.cesaom.model.ComLine;
@@ -16,23 +13,27 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @SpringBootTest
 class FieldControllerTest {
 
-    @Mock
-    Map<Integer, ComLine> comLines = new HashMap<>();
-
-    @InjectMocks
+    Map<Integer, ComLine> comLines;
     FieldController[] fieldControllers;
 
     @BeforeEach
     public void setup() {
         try {
+            comLines = new HashMap<>();
             comLines = XmlLinesReader.getXmlRows(getClass().getClassLoader().getResourceAsStream("test.xml"));
-            int i = 0;
+            fieldControllers = new FieldController[comLines.size()];
             for (ComLine comLine : comLines.values()) {
-                fieldControllers[i] = new FieldController(comLine);
-                i++;
+                fieldControllers[comLine.getId()-1] = mock(FieldController.class);
+                for (Heliostat heliostat : comLine.getHeliostats().values()) {
+                    when(fieldControllers[comLine.getId()-1].command(heliostat.getId(), "a")).thenReturn("Command accepted");
+                }
             }
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
@@ -44,14 +45,11 @@ class FieldControllerTest {
     }
 
     @Test
-    public void pollOne() {
-        fieldControllers[0].poll(1);
-        Assertions.assertEquals(fieldControllers[1].getComLine().getHeliostats().get(1), new Heliostat(1));
-    }
-
-    @Test
     public void sendCommandTest() {
-        fieldControllers[0].command(1, "a");
-        Assertions.assertEquals(fieldControllers[1].getComLine().getHeliostats().get(1), new Heliostat(1));
+        for (ComLine comLine : comLines.values()) {
+            for (Heliostat heliostat : comLine.getHeliostats().values()) {
+                assertEquals("Command accepted", fieldControllers[comLine.getId()-1].command(heliostat.getId(), "a"));
+            }
+        }
     }
 }

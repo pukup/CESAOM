@@ -71,7 +71,16 @@ public class RestController {
     }
 
     /**
-     * @return All <code>ComLine</code> objects with its <code>Heliostat</code> objects values.
+     * @return Number of <code>ComLine</code> objects within comLineMap.
+     */
+    @GetMapping(value = "/getNumber", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public int getNumber() {
+        return comLineMap.size();
+    }
+
+    /**
+     * @return <code>ComLine</code> object with its <code>Heliostat</code> objects values.
      */
     @GetMapping(value = "/getCache", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -91,6 +100,11 @@ public class RestController {
     @ResponseBody
     public String command(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam String command) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).command(heliostatId, command);
         timerPollTasks.get(comLineId).pause(false);
         return s;
@@ -108,6 +122,11 @@ public class RestController {
     @ResponseBody
     public String focus(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int focus) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).focus(heliostatId, focus);
         timerPollTasks.get(comLineId).pause(false);
         return s;
@@ -128,6 +147,11 @@ public class RestController {
     @ResponseBody
     public String newFocus(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int focus, @RequestParam int x, @RequestParam int y, @RequestParam int z) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).newFocus(heliostatId, focus, x, y, z);
         timerPollTasks.get(comLineId).pause(false);
         return s;
@@ -145,6 +169,11 @@ public class RestController {
     @ResponseBody
     public String setAzimuth(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int azimuth) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).setAzimuth(heliostatId, azimuth);
         timerPollTasks.get(comLineId).pause(false);
         return s;
@@ -162,6 +191,11 @@ public class RestController {
     @ResponseBody
     public String setElevation(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int elevation) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).setElevation(heliostatId, elevation);
         timerPollTasks.get(comLineId).pause(false);
         return s;
@@ -178,6 +212,11 @@ public class RestController {
     @ResponseBody
     public String getOffsetAz(@RequestParam int comLineId, @RequestParam int heliostatId) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).getOffsetAz(heliostatId);
         timerPollTasks.get(comLineId).pause(false);
         return s;
@@ -194,6 +233,11 @@ public class RestController {
     @ResponseBody
     public String getOffsetEl(@RequestParam int comLineId, @RequestParam int heliostatId) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).getOffsetEl(heliostatId);
         timerPollTasks.get(comLineId).pause(false);
         return s;
@@ -211,6 +255,11 @@ public class RestController {
     @ResponseBody
     public String setOffsetAz(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int offsetAz) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).setOffsetAz(heliostatId, offsetAz);
         timerPollTasks.get(comLineId).pause(false);
         return s;
@@ -228,6 +277,11 @@ public class RestController {
     @ResponseBody
     public String setOffsetEl(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int offsetEl) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).setOffsetEl(heliostatId, offsetEl);
         timerPollTasks.get(comLineId).pause(false);
         return s;
@@ -244,6 +298,11 @@ public class RestController {
     @ResponseBody
     public String getDate(@RequestParam int comLineId, @RequestParam int heliostatId) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).getDate(heliostatId);
         timerPollTasks.get(comLineId).pause(false);
         return s;
@@ -260,6 +319,11 @@ public class RestController {
     @ResponseBody
     public String getHour(@RequestParam int comLineId, @RequestParam int heliostatId) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).getHour(heliostatId);
         timerPollTasks.get(comLineId).pause(false);
         return s;
@@ -276,6 +340,11 @@ public class RestController {
     @ResponseBody
     public String setDate(@RequestParam int comLineId, @RequestParam int heliostatId) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).setDate(heliostatId);
         timerPollTasks.get(comLineId).pause(false);
         return s;
@@ -292,6 +361,11 @@ public class RestController {
     @ResponseBody
     public String setHour(@RequestParam int comLineId, @RequestParam int heliostatId) {
         timerPollTasks.get(comLineId).pause(true);
+        try {
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         String s = fieldControllers.get(comLineId).setHour(heliostatId);
         timerPollTasks.get(comLineId).pause(false);
         return s;

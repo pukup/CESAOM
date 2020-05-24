@@ -53,7 +53,7 @@ public class TimerPollTask extends TimerTask {
         for (Heliostat heliostat : comLine.getHeliostats().values()) {
             while (pause) {
                 try {
-                    Thread.sleep(2000);//wait
+                    Thread.sleep(100);//wait
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

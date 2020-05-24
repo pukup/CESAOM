@@ -1,10 +1,10 @@
 <root>
-    <comLine id="1" linuxDir="/dev/ttyUSB0" winDir="buf">
+    <comLine id="1" linuxDir="/dev/ttyUSB0" winDir="COM0">
         <heliostat id="1"/>
         <heliostat id="2"/>
         <heliostat id="3"/>
     </comLine>
-    <comLine id="2" linuxDir="/dev/ttyUSB0" winDir="buf">
+    <comLine id="2" linuxDir="/dev/ttyUSB1" winDir="COM1">
         <heliostat id="1"/>
         <heliostat id="2"/>
         <heliostat id="3"/>

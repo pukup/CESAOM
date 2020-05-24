@@ -1,319 +1,319 @@
 <root>
-    <!--    <comLine id="16" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="128"/>-->
-    <!--        <heliostat id="129"/>-->
-    <!--        <heliostat id="130"/>-->
-    <!--        <heliostat id="131"/>-->
-    <!--        <heliostat id="132"/>-->
-    <!--        <heliostat id="133"/>-->
-    <!--        <heliostat id="134"/>-->
-    <!--        <heliostat id="135"/>-->
-    <!--        <heliostat id="136"/>-->
-    <!--        <heliostat id="137"/>-->
-    <!--        <heliostat id="138"/>-->
-    <!--        <heliostat id="139"/>-->
-    <!--        <heliostat id="140"/>-->
-    <!--        <heliostat id="141"/>-->
-    <!--        <heliostat id="142"/>-->
-    <!--        <heliostat id="143"/>-->
-    <!--        <heliostat id="144"/>-->
-    <!--        <heliostat id="145"/>-->
-    <!--        <heliostat id="146"/>-->
-    <!--    </comLine>-->
-    <!--    <comLine id="15" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="109"/>-->
-    <!--        <heliostat id="110"/>-->
-    <!--        <heliostat id="111"/>-->
-    <!--        <heliostat id="112"/>-->
-    <!--        <heliostat id="113"/>-->
-    <!--        <heliostat id="114"/>-->
-    <!--        <heliostat id="115"/>-->
-    <!--        <heliostat id="116"/>-->
-    <!--        <heliostat id="117"/>-->
-    <!--        <heliostat id="118"/>-->
-    <!--        <heliostat id="119"/>-->
-    <!--        <heliostat id="120"/>-->
-    <!--        <heliostat id="121"/>-->
-    <!--        <heliostat id="122"/>-->
-    <!--        <heliostat id="123"/>-->
-    <!--        <heliostat id="124"/>-->
-    <!--        <heliostat id="125"/>-->
-    <!--        <heliostat id="126"/>-->
-    <!--        <heliostat id="127"/>-->
-    <!--    </comLine>-->
-    <!--    <comLine id="14" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="91"/>-->
-    <!--        <heliostat id="92"/>-->
-    <!--        <heliostat id="93"/>-->
-    <!--        <heliostat id="94"/>-->
-    <!--        <heliostat id="95"/>-->
-    <!--        <heliostat id="96"/>-->
-    <!--        <heliostat id="97"/>-->
-    <!--        <heliostat id="98"/>-->
-    <!--        <heliostat id="99"/>-->
-    <!--        <heliostat id="100"/>-->
-    <!--        <heliostat id="101"/>-->
-    <!--        <heliostat id="102"/>-->
-    <!--        <heliostat id="103"/>-->
-    <!--        <heliostat id="104"/>-->
-    <!--        <heliostat id="105"/>-->
-    <!--        <heliostat id="106"/>-->
-    <!--        <heliostat id="107"/>-->
-    <!--        <heliostat id="108"/>-->
-    <!--    </comLine>-->
-    <!--    <comLine id="13" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="67"/>-->
-    <!--        <heliostat id="68"/>-->
-    <!--        <heliostat id="69"/>-->
-    <!--        <heliostat id="70"/>-->
-    <!--        <heliostat id="71"/>-->
-    <!--        <heliostat id="72"/>-->
-    <!--        <heliostat id="73"/>-->
-    <!--        <heliostat id="74"/>-->
-    <!--        <heliostat id="75"/>-->
-    <!--        <heliostat id="82"/>-->
-    <!--        <heliostat id="83"/>-->
-    <!--        <heliostat id="84"/>-->
-    <!--        <heliostat id="85"/>-->
-    <!--        <heliostat id="86"/>-->
-    <!--        <heliostat id="87"/>-->
-    <!--        <heliostat id="88"/>-->
-    <!--        <heliostat id="89"/>-->
-    <!--        <heliostat id="90"/>-->
-    <!--    </comLine>-->
-    <!--    <comLine id="12" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="53"/>-->
-    <!--        <heliostat id="54"/>-->
-    <!--        <heliostat id="55"/>-->
-    <!--        <heliostat id="56"/>-->
-    <!--        <heliostat id="57"/>-->
-    <!--        <heliostat id="58"/>-->
-    <!--        <heliostat id="59"/>-->
-    <!--        <heliostat id="60"/>-->
-    <!--        <heliostat id="61"/>-->
-    <!--        <heliostat id="62"/>-->
-    <!--        <heliostat id="63"/>-->
-    <!--        <heliostat id="64"/>-->
-    <!--        <heliostat id="65"/>-->
-    <!--        <heliostat id="66"/>-->
-    <!--        <heliostat id="76"/>-->
-    <!--        <heliostat id="77"/>-->
-    <!--        <heliostat id="78"/>-->
-    <!--        <heliostat id="79"/>-->
-    <!--        <heliostat id="80"/>-->
-    <!--        <heliostat id="81"/>-->
-    <!--    </comLine>-->
-    <!--    <comLine id="11" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="34"/>-->
-    <!--        <heliostat id="35"/>-->
-    <!--        <heliostat id="36"/>-->
-    <!--        <heliostat id="37"/>-->
-    <!--        <heliostat id="38"/>-->
-    <!--        <heliostat id="39"/>-->
-    <!--        <heliostat id="40"/>-->
-    <!--        <heliostat id="41"/>-->
-    <!--        <heliostat id="42"/>-->
-    <!--        <heliostat id="43"/>-->
-    <!--        <heliostat id="44"/>-->
-    <!--        <heliostat id="45"/>-->
-    <!--        <heliostat id="46"/>-->
-    <!--        <heliostat id="47"/>-->
-    <!--        <heliostat id="48"/>-->
-    <!--        <heliostat id="49"/>-->
-    <!--        <heliostat id="50"/>-->
-    <!--        <heliostat id="51"/>-->
-    <!--        <heliostat id="52"/>-->
-    <!--    </comLine>-->
-    <!--    <comLine id="10" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="16"/>-->
-    <!--        <heliostat id="17"/>-->
-    <!--        <heliostat id="18"/>-->
-    <!--        <heliostat id="19"/>-->
-    <!--        <heliostat id="20"/>-->
-    <!--        <heliostat id="21"/>-->
-    <!--        <heliostat id="22"/>-->
-    <!--        <heliostat id="23"/>-->
-    <!--        <heliostat id="24"/>-->
-    <!--        <heliostat id="25"/>-->
-    <!--        <heliostat id="26"/>-->
-    <!--        <heliostat id="27"/>-->
-    <!--        <heliostat id="28"/>-->
-    <!--        <heliostat id="29"/>-->
-    <!--        <heliostat id="30"/>-->
-    <!--        <heliostat id="31"/>-->
-    <!--        <heliostat id="32"/>-->
-    <!--        <heliostat id="33"/>-->
-    <!--    </comLine>-->
-    <!--        <comLine id="9" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--            <heliostat id="1"/>-->
-    <!--            <heliostat id="2"/>-->
-    <!--            <heliostat id="3"/>-->
-    <!--            <heliostat id="4"/>-->
-    <!--            <heliostat id="5"/>-->
-    <!--            <heliostat id="6"/>-->
-    <!--            <heliostat id="7"/>-->
-    <!--            <heliostat id="8"/>-->
-    <!--            <heliostat id="9"/>-->
-    <!--            <heliostat id="10"/>-->
-    <!--            <heliostat id="11"/>-->
-    <!--            <heliostat id="12"/>-->
-    <!--            <heliostat id="13"/>-->
-    <!--            <heliostat id="14"/>-->
-    <!--            <heliostat id="15"/>-->
-    <!--        </comLine>-->
-    <!--    <comLine id="8" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="135"/>-->
-    <!--        <heliostat id="136"/>-->
-    <!--        <heliostat id="137"/>-->
-    <!--        <heliostat id="138"/>-->
-    <!--        <heliostat id="139"/>-->
-    <!--        <heliostat id="140"/>-->
-    <!--        <heliostat id="141"/>-->
-    <!--        <heliostat id="142"/>-->
-    <!--        <heliostat id="143"/>-->
-    <!--        <heliostat id="144"/>-->
-    <!--        <heliostat id="145"/>-->
-    <!--        <heliostat id="146"/>-->
-    <!--        <heliostat id="147"/>-->
-    <!--        <heliostat id="148"/>-->
-    <!--        <heliostat id="149"/>-->
-    <!--        <heliostat id="150"/>-->
-    <!--        <heliostat id="151"/>-->
-    <!--        <heliostat id="152"/>-->
-    <!--        <heliostat id="153"/>-->
-    <!--        <heliostat id="154"/>-->
-    <!--    </comLine>-->
-    <!--    <comLine id="7" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="115"/>-->
-    <!--        <heliostat id="116"/>-->
-    <!--        <heliostat id="117"/>-->
-    <!--        <heliostat id="118"/>-->
-    <!--        <heliostat id="119"/>-->
-    <!--        <heliostat id="120"/>-->
-    <!--        <heliostat id="121"/>-->
-    <!--        <heliostat id="122"/>-->
-    <!--        <heliostat id="123"/>-->
-    <!--        <heliostat id="124"/>-->
-    <!--        <heliostat id="125"/>-->
-    <!--        <heliostat id="126"/>-->
-    <!--        <heliostat id="127"/>-->
-    <!--        <heliostat id="128"/>-->
-    <!--        <heliostat id="129"/>-->
-    <!--        <heliostat id="130"/>-->
-    <!--        <heliostat id="131"/>-->
-    <!--        <heliostat id="132"/>-->
-    <!--        <heliostat id="133"/>-->
-    <!--        <heliostat id="134"/>-->
-    <!--    </comLine>-->
-    <!--    <comLine id="6" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="96"/>-->
-    <!--        <heliostat id="97"/>-->
-    <!--        <heliostat id="98"/>-->
-    <!--        <heliostat id="99"/>-->
-    <!--        <heliostat id="100"/>-->
-    <!--        <heliostat id="101"/>-->
-    <!--        <heliostat id="102"/>-->
-    <!--        <heliostat id="103"/>-->
-    <!--        <heliostat id="103"/>-->
-    <!--        <heliostat id="104"/>-->
-    <!--        <heliostat id="105"/>-->
-    <!--        <heliostat id="106"/>-->
-    <!--        <heliostat id="107"/>-->
-    <!--        <heliostat id="108"/>-->
-    <!--        <heliostat id="109"/>-->
-    <!--        <heliostat id="110"/>-->
-    <!--        <heliostat id="111"/>-->
-    <!--        <heliostat id="112"/>-->
-    <!--        <heliostat id="113"/>-->
-    <!--        <heliostat id="114"/>-->
-    <!--    </comLine>-->
-    <!--    <comLine id="5" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="71"/>-->
-    <!--        <heliostat id="72"/>-->
-    <!--        <heliostat id="73"/>-->
-    <!--        <heliostat id="74"/>-->
-    <!--        <heliostat id="75"/>-->
-    <!--        <heliostat id="76"/>-->
-    <!--        <heliostat id="77"/>-->
-    <!--        <heliostat id="78"/>-->
-    <!--        <heliostat id="79"/>-->
-    <!--        <heliostat id="80"/>-->
-    <!--        <heliostat id="87"/>-->
-    <!--        <heliostat id="88"/>-->
-    <!--        <heliostat id="89"/>-->
-    <!--        <heliostat id="90"/>-->
-    <!--        <heliostat id="91"/>-->
-    <!--        <heliostat id="92"/>-->
-    <!--        <heliostat id="93"/>-->
-    <!--        <heliostat id="94"/>-->
-    <!--        <heliostat id="95"/>-->
-    <!--    </comLine>-->
-    <!--    <comLine id="4" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="57"/>-->
-    <!--        <heliostat id="58"/>-->
-    <!--        <heliostat id="59"/>-->
-    <!--        <heliostat id="60"/>-->
-    <!--        <heliostat id="61"/>-->
-    <!--        <heliostat id="62"/>-->
-    <!--        <heliostat id="63"/>-->
-    <!--        <heliostat id="64"/>-->
-    <!--        <heliostat id="65"/>-->
-    <!--        <heliostat id="66"/>-->
-    <!--        <heliostat id="67"/>-->
-    <!--        <heliostat id="68"/>-->
-    <!--        <heliostat id="69"/>-->
-    <!--        <heliostat id="70"/>-->
-    <!--        <heliostat id="81"/>-->
-    <!--        <heliostat id="82"/>-->
-    <!--        <heliostat id="83"/>-->
-    <!--        <heliostat id="84"/>-->
-    <!--        <heliostat id="85"/>-->
-    <!--        <heliostat id="86"/>-->
-    <!--    </comLine>-->
-    <!--    <comLine id="3" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="37"/>-->
-    <!--        <heliostat id="38"/>-->
-    <!--        <heliostat id="39"/>-->
-    <!--        <heliostat id="40"/>-->
-    <!--        <heliostat id="41"/>-->
-    <!--        <heliostat id="42"/>-->
-    <!--        <heliostat id="43"/>-->
-    <!--        <heliostat id="44"/>-->
-    <!--        <heliostat id="45"/>-->
-    <!--        <heliostat id="46"/>-->
-    <!--        <heliostat id="47"/>-->
-    <!--        <heliostat id="48"/>-->
-    <!--        <heliostat id="49"/>-->
-    <!--        <heliostat id="50"/>-->
-    <!--        <heliostat id="51"/>-->
-    <!--        <heliostat id="52"/>-->
-    <!--        <heliostat id="53"/>-->
-    <!--        <heliostat id="54"/>-->
-    <!--        <heliostat id="55"/>-->
-    <!--        <heliostat id="56"/>-->
-    <!--    </comLine>-->
-    <!--    <comLine id="2" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">-->
-    <!--        <heliostat id="18"/>-->
-    <!--        <heliostat id="19"/>-->
-    <!--        <heliostat id="20"/>-->
-    <!--        <heliostat id="21"/>-->
-    <!--        <heliostat id="22"/>-->
-    <!--        <heliostat id="23"/>-->
-    <!--        <heliostat id="24"/>-->
-    <!--        <heliostat id="25"/>-->
-    <!--        <heliostat id="26"/>-->
-    <!--        <heliostat id="27"/>-->
-    <!--        <heliostat id="28"/>-->
-    <!--        <heliostat id="29"/>-->
-    <!--        <heliostat id="30"/>-->
-    <!--        <heliostat id="31"/>-->
-    <!--        <heliostat id="32"/>-->
-    <!--        <heliostat id="33"/>-->
-    <!--        <heliostat id="34"/>-->
-    <!--        <heliostat id="35"/>-->
-    <!--        <heliostat id="36"/>-->
-    <!--    </comLine>-->
-    <comLine id="1" linuxDir="/dev/ttyUSB0" winDir="/dev/ttyUSB0">
+    <comLine id="16" linuxDir="/dev/ttyUSB0" winDir="COM16">
+        <heliostat id="128"/>
+        <heliostat id="129"/>
+        <heliostat id="130"/>
+        <heliostat id="131"/>
+        <heliostat id="132"/>
+        <heliostat id="133"/>
+        <heliostat id="134"/>
+        <heliostat id="135"/>
+        <heliostat id="136"/>
+        <heliostat id="137"/>
+        <heliostat id="138"/>
+        <heliostat id="139"/>
+        <heliostat id="140"/>
+        <heliostat id="141"/>
+        <heliostat id="142"/>
+        <heliostat id="143"/>
+        <heliostat id="144"/>
+        <heliostat id="145"/>
+        <heliostat id="146"/>
+    </comLine>
+    <comLine id="15" linuxDir="/dev/ttyUSB0" winDir="COM15">
+        <heliostat id="109"/>
+        <heliostat id="110"/>
+        <heliostat id="111"/>
+        <heliostat id="112"/>
+        <heliostat id="113"/>
+        <heliostat id="114"/>
+        <heliostat id="115"/>
+        <heliostat id="116"/>
+        <heliostat id="117"/>
+        <heliostat id="118"/>
+        <heliostat id="119"/>
+        <heliostat id="120"/>
+        <heliostat id="121"/>
+        <heliostat id="122"/>
+        <heliostat id="123"/>
+        <heliostat id="124"/>
+        <heliostat id="125"/>
+        <heliostat id="126"/>
+        <heliostat id="127"/>
+    </comLine>
+    <comLine id="14" linuxDir="/dev/ttyUSB0" winDir="COM14">
+        <heliostat id="91"/>
+        <heliostat id="92"/>
+        <heliostat id="93"/>
+        <heliostat id="94"/>
+        <heliostat id="95"/>
+        <heliostat id="96"/>
+        <heliostat id="97"/>
+        <heliostat id="98"/>
+        <heliostat id="99"/>
+        <heliostat id="100"/>
+        <heliostat id="101"/>
+        <heliostat id="102"/>
+        <heliostat id="103"/>
+        <heliostat id="104"/>
+        <heliostat id="105"/>
+        <heliostat id="106"/>
+        <heliostat id="107"/>
+        <heliostat id="108"/>
+    </comLine>
+    <comLine id="13" linuxDir="/dev/ttyUSB0" winDir="COM13">
+        <heliostat id="67"/>
+        <heliostat id="68"/>
+        <heliostat id="69"/>
+        <heliostat id="70"/>
+        <heliostat id="71"/>
+        <heliostat id="72"/>
+        <heliostat id="73"/>
+        <heliostat id="74"/>
+        <heliostat id="75"/>
+        <heliostat id="82"/>
+        <heliostat id="83"/>
+        <heliostat id="84"/>
+        <heliostat id="85"/>
+        <heliostat id="86"/>
+        <heliostat id="87"/>
+        <heliostat id="88"/>
+        <heliostat id="89"/>
+        <heliostat id="90"/>
+    </comLine>
+    <comLine id="12" linuxDir="/dev/ttyUSB0" winDir="COM12">
+        <heliostat id="53"/>
+        <heliostat id="54"/>
+        <heliostat id="55"/>
+        <heliostat id="56"/>
+        <heliostat id="57"/>
+        <heliostat id="58"/>
+        <heliostat id="59"/>
+        <heliostat id="60"/>
+        <heliostat id="61"/>
+        <heliostat id="62"/>
+        <heliostat id="63"/>
+        <heliostat id="64"/>
+        <heliostat id="65"/>
+        <heliostat id="66"/>
+        <heliostat id="76"/>
+        <heliostat id="77"/>
+        <heliostat id="78"/>
+        <heliostat id="79"/>
+        <heliostat id="80"/>
+        <heliostat id="81"/>
+    </comLine>
+    <comLine id="11" linuxDir="/dev/ttyUSB0" winDir="COM11">
+        <heliostat id="34"/>
+        <heliostat id="35"/>
+        <heliostat id="36"/>
+        <heliostat id="37"/>
+        <heliostat id="38"/>
+        <heliostat id="39"/>
+        <heliostat id="40"/>
+        <heliostat id="41"/>
+        <heliostat id="42"/>
+        <heliostat id="43"/>
+        <heliostat id="44"/>
+        <heliostat id="45"/>
+        <heliostat id="46"/>
+        <heliostat id="47"/>
+        <heliostat id="48"/>
+        <heliostat id="49"/>
+        <heliostat id="50"/>
+        <heliostat id="51"/>
+        <heliostat id="52"/>
+    </comLine>
+    <comLine id="10" linuxDir="/dev/ttyUSB0" winDir="COM10">
+        <heliostat id="16"/>
+        <heliostat id="17"/>
+        <heliostat id="18"/>
+        <heliostat id="19"/>
+        <heliostat id="20"/>
+        <heliostat id="21"/>
+        <heliostat id="22"/>
+        <heliostat id="23"/>
+        <heliostat id="24"/>
+        <heliostat id="25"/>
+        <heliostat id="26"/>
+        <heliostat id="27"/>
+        <heliostat id="28"/>
+        <heliostat id="29"/>
+        <heliostat id="30"/>
+        <heliostat id="31"/>
+        <heliostat id="32"/>
+        <heliostat id="33"/>
+    </comLine>
+    <comLine id="9" linuxDir="/dev/ttyUSB0" winDir="COM9">
+        <heliostat id="1"/>
+        <heliostat id="2"/>
+        <heliostat id="3"/>
+        <heliostat id="4"/>
+        <heliostat id="5"/>
+        <heliostat id="6"/>
+        <heliostat id="7"/>
+        <heliostat id="8"/>
+        <heliostat id="9"/>
+        <heliostat id="10"/>
+        <heliostat id="11"/>
+        <heliostat id="12"/>
+        <heliostat id="13"/>
+        <heliostat id="14"/>
+        <heliostat id="15"/>
+    </comLine>
+    <comLine id="8" linuxDir="/dev/ttyUSB0" winDir="COM8">
+        <heliostat id="135"/>
+        <heliostat id="136"/>
+        <heliostat id="137"/>
+        <heliostat id="138"/>
+        <heliostat id="139"/>
+        <heliostat id="140"/>
+        <heliostat id="141"/>
+        <heliostat id="142"/>
+        <heliostat id="143"/>
+        <heliostat id="144"/>
+        <heliostat id="145"/>
+        <heliostat id="146"/>
+        <heliostat id="147"/>
+        <heliostat id="148"/>
+        <heliostat id="149"/>
+        <heliostat id="150"/>
+        <heliostat id="151"/>
+        <heliostat id="152"/>
+        <heliostat id="153"/>
+        <heliostat id="154"/>
+    </comLine>
+    <comLine id="7" linuxDir="/dev/ttyUSB0" winDir="COM7">
+        <heliostat id="115"/>
+        <heliostat id="116"/>
+        <heliostat id="117"/>
+        <heliostat id="118"/>
+        <heliostat id="119"/>
+        <heliostat id="120"/>
+        <heliostat id="121"/>
+        <heliostat id="122"/>
+        <heliostat id="123"/>
+        <heliostat id="124"/>
+        <heliostat id="125"/>
+        <heliostat id="126"/>
+        <heliostat id="127"/>
+        <heliostat id="128"/>
+        <heliostat id="129"/>
+        <heliostat id="130"/>
+        <heliostat id="131"/>
+        <heliostat id="132"/>
+        <heliostat id="133"/>
+        <heliostat id="134"/>
+    </comLine>
+    <comLine id="6" linuxDir="/dev/ttyUSB0" winDir="COM6">
+        <heliostat id="96"/>
+        <heliostat id="97"/>
+        <heliostat id="98"/>
+        <heliostat id="99"/>
+        <heliostat id="100"/>
+        <heliostat id="101"/>
+        <heliostat id="102"/>
+        <heliostat id="103"/>
+        <heliostat id="103"/>
+        <heliostat id="104"/>
+        <heliostat id="105"/>
+        <heliostat id="106"/>
+        <heliostat id="107"/>
+        <heliostat id="108"/>
+        <heliostat id="109"/>
+        <heliostat id="110"/>
+        <heliostat id="111"/>
+        <heliostat id="112"/>
+        <heliostat id="113"/>
+        <heliostat id="114"/>
+    </comLine>
+    <comLine id="5" linuxDir="/dev/ttyUSB0" winDir="COM5">
+        <heliostat id="71"/>
+        <heliostat id="72"/>
+        <heliostat id="73"/>
+        <heliostat id="74"/>
+        <heliostat id="75"/>
+        <heliostat id="76"/>
+        <heliostat id="77"/>
+        <heliostat id="78"/>
+        <heliostat id="79"/>
+        <heliostat id="80"/>
+        <heliostat id="87"/>
+        <heliostat id="88"/>
+        <heliostat id="89"/>
+        <heliostat id="90"/>
+        <heliostat id="91"/>
+        <heliostat id="92"/>
+        <heliostat id="93"/>
+        <heliostat id="94"/>
+        <heliostat id="95"/>
+    </comLine>
+    <comLine id="4" linuxDir="/dev/ttyUSB0" winDir="COM4">
+        <heliostat id="57"/>
+        <heliostat id="58"/>
+        <heliostat id="59"/>
+        <heliostat id="60"/>
+        <heliostat id="61"/>
+        <heliostat id="62"/>
+        <heliostat id="63"/>
+        <heliostat id="64"/>
+        <heliostat id="65"/>
+        <heliostat id="66"/>
+        <heliostat id="67"/>
+        <heliostat id="68"/>
+        <heliostat id="69"/>
+        <heliostat id="70"/>
+        <heliostat id="81"/>
+        <heliostat id="82"/>
+        <heliostat id="83"/>
+        <heliostat id="84"/>
+        <heliostat id="85"/>
+        <heliostat id="86"/>
+    </comLine>
+    <comLine id="3" linuxDir="/dev/ttyUSB0" winDir="COM3">
+        <heliostat id="37"/>
+        <heliostat id="38"/>
+        <heliostat id="39"/>
+        <heliostat id="40"/>
+        <heliostat id="41"/>
+        <heliostat id="42"/>
+        <heliostat id="43"/>
+        <heliostat id="44"/>
+        <heliostat id="45"/>
+        <heliostat id="46"/>
+        <heliostat id="47"/>
+        <heliostat id="48"/>
+        <heliostat id="49"/>
+        <heliostat id="50"/>
+        <heliostat id="51"/>
+        <heliostat id="52"/>
+        <heliostat id="53"/>
+        <heliostat id="54"/>
+        <heliostat id="55"/>
+        <heliostat id="56"/>
+    </comLine>
+    <comLine id="2" linuxDir="/dev/ttyUSB0" winDir="COM2">
+        <heliostat id="18"/>
+        <heliostat id="19"/>
+        <heliostat id="20"/>
+        <heliostat id="21"/>
+        <heliostat id="22"/>
+        <heliostat id="23"/>
+        <heliostat id="24"/>
+        <heliostat id="25"/>
+        <heliostat id="26"/>
+        <heliostat id="27"/>
+        <heliostat id="28"/>
+        <heliostat id="29"/>
+        <heliostat id="30"/>
+        <heliostat id="31"/>
+        <heliostat id="32"/>
+        <heliostat id="33"/>
+        <heliostat id="34"/>
+        <heliostat id="35"/>
+        <heliostat id="36"/>
+    </comLine>
+    <comLine id="1" linuxDir="/dev/ttyUSB0" winDir="COM1">
         <heliostat id="1"/>
         <heliostat id="2"/>
         <heliostat id="3"/>
