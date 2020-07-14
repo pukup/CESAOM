@@ -19,7 +19,8 @@ public class FieldController {
      * @param serialController contains the methods to control the jSerialComm API.
      */
     private static final byte[] POLL_ARRAY = {0x03, 0x00, 0x10, 0x00, 0x08};
-    private static final byte[] HOUR_ARRAY = {0x03, 0x03, (byte) 0xEB, 0x00, 0x02};
+    private static final byte[] HOUR_ARRAY = {0x03, 0x03, (byte) 0xE8, 0x00, 0x03};
+
 
     private ComLine comLine;
     private SerialController serialController;
@@ -27,6 +28,7 @@ public class FieldController {
     public FieldController(ComLine comLine) {
         this.comLine = comLine;
         openSerialController();
+//        pollAll();
     }
 
     public ComLine getComLine() {
@@ -64,6 +66,29 @@ public class FieldController {
     }
 
     /**
+     *
+     */
+    public void pollAll() {
+        try {
+            if (!serialController.isOpen())
+                openSerialController();
+            for (int i = 1; i < 256; i++) {
+                serialController.send(setPollerFrame(i));
+                Thread.sleep(250);
+                System.out.print(i+" response: ");
+                ByteBuffer byteBuffer = ByteBuffer.wrap(serialController.receive());
+                System.out.println(bufferToString(byteBuffer));
+            }
+            Thread.sleep(250);
+        } catch (InterruptedException e) {
+            serialController.close();
+            e.printStackTrace();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Adds the <object>Heliostat</object> address, the poller bytes and CRC into an array.
      *
      * @param heliostatId represents the number or position of the comLine.
@@ -74,7 +99,7 @@ public class FieldController {
         byteBuffer.put((byte) heliostatId);
         byteBuffer.put(POLL_ARRAY);
         byteBuffer.put(CRC.calculate(byteBuffer.array(), 6));
-//        System.out.println(bufferToString(byteBuffer));
+        System.out.println(bufferToString(byteBuffer));
         return byteBuffer.array();
     }
 
@@ -89,12 +114,12 @@ public class FieldController {
      */
     private synchronized void checkPollResponse(Heliostat heliostat) {
         if (serialController.getPort().bytesAvailable() < 1) {
-//            System.out.println("no poll response");
+            System.out.println("no poll response");
             heliostat.setEvent(0x10);
             heliostat.setState(1);
         } else {
             ByteBuffer byteBuffer = ByteBuffer.wrap(serialController.receive());
-//            System.out.println(bufferToString(byteBuffer));
+            System.out.println(bufferToString(byteBuffer));
             heliostat.setAttributes(byteBuffer);
         }
     }
@@ -209,6 +234,9 @@ public class FieldController {
                 break;
             case "l":
                 bytes[7] = 108;
+                break;
+            case "m":
+                bytes[7] = 109;
                 break;
             case "n":
                 bytes[7] = 110;
@@ -573,7 +601,7 @@ public class FieldController {
             if (!serialController.isOpen())
                 openSerialController();
             Heliostat heliostat = comLine.getHeliostats().get(heliostatId);
-            //            serialController.send(setHourGetterFrame(heliostatId));
+            serialController.send(setHourGetterFrame(heliostatId));
             Thread.sleep(500);
             comLine.getHeliostats().put(heliostatId, heliostat);
             return checkCommandResponse(heliostat);
@@ -587,7 +615,7 @@ public class FieldController {
             if (!serialController.isOpen())
                 openSerialController();
             Heliostat heliostat = comLine.getHeliostats().get(heliostatId);
-            //            serialController.send(setHourGetterFrame(heliostatId));
+            serialController.send(setHourGetterFrame(heliostatId));
             Thread.sleep(500);
             comLine.getHeliostats().put(heliostatId, heliostat);
             return checkCommandResponse(heliostat);
@@ -595,4 +623,16 @@ public class FieldController {
             return e.getMessage();
         }
     }
+
+    //01(id heliostato) 10(codigo modbus) 00(direccion) 00 00 04 08 00 48(comando) 00 0b(hora) 00 2c(min) 00 00(seg) 1a 76
+    //01(id heliostato) 10(codigo modbus) 00(direccion) 00 00 04 08 00 54(comando) 00 0b(dia) 00 2c(mes) 00 00(año) 1a 76
+    //01(id heliostato) 10(codigo modbus) 00(direccion) 00 00 03 06 00 6d(comando) 00 0b(az) 00 2c(el) 1a 76
+    //01(id heliostato) 10(codigo modbus) 00(direccion) 00 00 01 02 00 52(comando reset variables) 1a 76
+    //01(id heliostato) 10(codigo modbus) 00(direccion) 00 00 02 04 00 52(comando reset power) 00 01 1a 76
+    //("F"oco)01(id heliostato) 10(codigo modbus) 00(direccion) 00 00 08 10 00 46(comando) 00 01 (focoId) 00 00 00 00 (x) 00 00 00 00(y) 00 00 00 00(z) 1a 76
+    //01(id heliostato) 10(codigo modbus) 00(direccion) 00 00 04 08 00 50(comando) 00 01 (puntoId) 00 00(az) 00 00(el) 1a 76
+    //("P"unto)01(id heliostato) 10(codigo modbus) 00(direccion) 00 00 04 08 00 50(comando) 00 01 (puntoId) 00 00(az) 00 00(el) 1a 76
+    //("f"oco)01(id heliostato) 10(codigo modbus) 00(direccion) 00 00 02 04 00 66(comando) 00 01 (focoId) 1a 76
+    //("p"unto)01(id heliostato) 10(codigo modbus) 00(direccion) 00 00 02 04 00 70(comando) 00 01 (puntoId) 1a 76
+
 }

@@ -66,7 +66,7 @@ public class RestController {
             fieldControllers.put(comLine.getId(), new FieldController(comLine));
             timerPollTasks.put(comLine.getId(), new TimerPollTask(fieldControllers.get(comLine.getId())));
             timers.put(comLine.getId(), new Timer("Timer: " + comLine.getId()));
-            timers.get(comLine.getId()).schedule(timerPollTasks.get(comLine.getId()), 0, 5000);
+            timers.get(comLine.getId()).schedule(timerPollTasks.get(comLine.getId()), 0, 1000);
         }
     }
 
@@ -120,7 +120,7 @@ public class RestController {
      */
     @GetMapping(value = "/focus", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String focus(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int focus) {
+    public String setFocus(@RequestParam int comLineId, @RequestParam int heliostatId, @RequestParam int focus) {
         timerPollTasks.get(comLineId).pause(true);
         try {
             Thread.sleep(250);

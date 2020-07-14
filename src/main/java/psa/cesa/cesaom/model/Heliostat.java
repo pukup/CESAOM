@@ -54,19 +54,19 @@ public class Heliostat {
         this.event = event;
     }
 
-    public int getDiagnosysAZ() {
+    public int getDiagnosisAZ() {
         return diagnosisAZ;
     }
 
-    public void setDiagnosysAZ(int diagnosisAZ) {
+    public void setDiagnosisAZ(int diagnosisAZ) {
         this.diagnosisAZ = diagnosisAZ;
     }
 
-    public int getDiagnosysEL() {
+    public int getDiagnosisEL() {
         return diagnosisEL;
     }
 
-    public void setDiagnosysEL(int diagnosisEL) {
+    public void setDiagnosisEL(int diagnosisEL) {
         this.diagnosisEL = diagnosisEL;
     }
 
@@ -118,10 +118,10 @@ public class Heliostat {
                     setEvent(b);
                     break;
                 case 8:
-                    setDiagnosysAZ(b);
+                    setDiagnosisAZ(b);
                     break;
                 case 10:
-                    setDiagnosysEL(b);
+                    setDiagnosisEL(b);
                     break;
                 case 12:
                     setPositionAZ(b);
